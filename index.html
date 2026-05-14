@@ -314,6 +314,27 @@
       color: white;
     }
 
+    .download-row {
+      display: flex;
+      justify-content: center;
+      margin: 0 0 16px;
+    }
+
+    .download-btn {
+      border: none;
+      padding: 11px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      background: #0f172a;
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    .download-btn:hover {
+      background: #1d4ed8;
+    }
+
     .filter-btn.open.active { background: #ea580c; }
     .filter-btn.closed.active { background: #dc2626; }
     .filter-btn.ready.active { background: #16a34a; }
@@ -624,6 +645,10 @@
       <button class="filter-btn open" id="partyOpen" onclick="setPartyFilter('open')">Open</button>
       <button class="filter-btn closed" id="partyClosed" onclick="setPartyFilter('closed')">Closed</button>
       <button class="filter-btn doesnt" id="partyDoesnt" onclick="setPartyFilter('doesnt')">Doesn't exist</button>
+    </div>
+
+    <div class="download-row">
+      <button class="download-btn" onclick="downloadExcelDump()">Download Excel Dump</button>
     </div>
 
     <div class="table-wrap">
@@ -1225,6 +1250,133 @@
 
     return `<span class="badge badge-closed">${safe(display(row.status, "Closed"))}</span>`;
   }
+
+
+  function downloadExcelDump() {
+    const rows = getPartyListData();
+
+    if (!rows || rows.length === 0) {
+      alert("No data available to download for the selected filter.");
+      return;
+    }
+
+    const stateName = SHEETS[currentSheet].name;
+    const filterName = partyFilter === "all" ? "All" :
+                       partyFilter === "ready" ? "Onboarded" :
+                       partyFilter === "open" ? "Open" :
+                       partyFilter === "closed" ? "Closed" :
+                       "Doesnt Exist";
+
+    const headers = [
+      "RTR Code",
+      "State",
+      "Party Name",
+      "Latitude",
+      "Longitude",
+      "District",
+      "Tehsil",
+      "Town",
+      "Verified",
+      "Submission Time",
+      "Sales Team",
+      "Live Lat",
+      "Live Long",
+      "Distance from Centre",
+      "Status",
+      "Status Category",
+      "Owner Name",
+      "Phone Number",
+      "Onboarded",
+      "Photo Link",
+      "Remarks"
+    ];
+
+    let table = "<table border='1'><thead><tr>";
+
+    headers.forEach(h => {
+      table += "<th>" + excelSafe(h) + "</th>";
+    });
+
+    table += "</tr></thead><tbody>";
+
+    rows.forEach(row => {
+      const statusCategory = getStatusLabel(row);
+      const onboarded = isReady(row) ? "Yes" : "No";
+
+      const values = [
+        row.rtr,
+        row.state,
+        row.party,
+        row.latitude,
+        row.longitude,
+        row.district,
+        row.tehsil,
+        row.town,
+        row.verified,
+        row.submissionTime,
+        row.sde,
+        row.liveLat,
+        row.liveLong,
+        row.distance,
+        row.status,
+        statusCategory,
+        row.owner,
+        row.phone,
+        onboarded,
+        row.photo,
+        row.remarks
+      ];
+
+      table += "<tr>";
+
+      values.forEach((value, index) => {
+        const cleaned = excelSafe(display(value, ""));
+
+        if (headers[index] === "Photo Link" && cleaned) {
+          table += "<td><a href='" + cleaned + "'>" + cleaned + "</a></td>";
+        } else {
+          table += "<td>" + cleaned + "</td>";
+        }
+      });
+
+      table += "</tr>";
+    });
+
+    table += "</tbody></table>";
+
+    const htmlContent =
+      "<html><head><meta charset='UTF-8'></head><body>" +
+      "<h2>Party Onboarding Project - " + excelSafe(stateName) + " - " + excelSafe(filterName) + "</h2>" +
+      table +
+      "</body></html>";
+
+    const blob = new Blob([htmlContent], {
+      type: "application/vnd.ms-excel;charset=utf-8;"
+    });
+
+    const fileName =
+      "Party_Onboarding_" +
+      stateName.replace(/\s+/g, "_") +
+      "_" +
+      filterName.replace(/\s+/g, "_") +
+      "_Dump.xls";
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function excelSafe(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
 
   function display(value, fallback = "Not Available") {
     const cleaned = String(value || "").trim();
