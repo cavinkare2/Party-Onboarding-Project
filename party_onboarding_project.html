@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Party Onboarding Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      margin: 0;
+      color: #1f2937;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 24px 30px;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.22);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      height: 58px;
+      width: auto;
+      object-fit: contain;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      display: block;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .state-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .state-label {
+      font-weight: bold;
+      font-size: 15px;
+      color: white;
+      opacity: 0.95;
+    }
+
+    .state-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .state-btn {
+      border: 1px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.15);
+      color: white;
+      padding: 11px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .state-btn.active {
+      background: white;
+      color: #1d4ed8;
+    }
+
+    .container { padding: 24px; }
+
+    .loading {
+      background: #fff7ed;
+      color: #9a3412;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      border: 1px solid #fed7aa;
+      display: none;
+      text-align: center;
+    }
+
+    .kpi-grid,
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-bottom: 26px;
+    }
+
+    .panel,
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .box { margin-bottom: 26px; }
+
+    .panel h2,
+    .box h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+      text-align: center;
+    }
+
+    .today-panel {
+      background: linear-gradient(180deg, #ecfdf5, #ffffff);
+      border: 1px solid #bbf7d0;
+    }
+
+    .today-panel h2 {
+      color: #166534;
+      border-bottom: 1px solid #bbf7d0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 20px;
+      border-left: 5px solid #1d4ed8;
+      text-align: center;
+    }
+
+    .today-panel .card {
+      background: #f0fdf4;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 38px;
+      color: #1d4ed8;
+      text-align: center;
+    }
+
+    .card p {
+      margin: 8px 0 0;
+      font-weight: bold;
+      color: #475569;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .green { border-left-color: #16a34a; }
+    .green h3 { color: #16a34a; }
+
+    .orange { border-left-color: #ea580c; }
+    .orange h3 { color: #ea580c; }
+
+    .purple { border-left-color: #7c3aed; }
+    .purple h3 { color: #7c3aed; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      max-height: 680px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    .party-table { min-width: 1450px; }
+    .summary-table { min-width: 520px; }
+
+    th {
+      background: #1e40af;
+      color: white;
+      padding: 13px;
+      text-align: center;
+      font-size: 13px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .today-panel th {
+      background: #15803d;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 13px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    tr:hover { background: #f8fafc; }
+
+    .badge {
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .badge-open {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .badge-ready {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-closed {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge-doesnt {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .badge-no {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .party-name {
+      font-weight: bold;
+      color: #111827;
+      min-width: 180px;
+      text-align: center;
+    }
+
+    .photo {
+      width: 230px;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+      background: #f1f5f9;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    }
+
+    .photo:hover {
+      transform: scale(1.04);
+      transition: 0.2s;
+    }
+
+    .no-photo {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .summary-row {
+      font-weight: bold;
+      background: #f1f5f9;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-btn {
+      border: none;
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: bold;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .filter-btn.active {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .filter-btn.open.active { background: #ea580c; }
+    .filter-btn.closed.active { background: #dc2626; }
+    .filter-btn.ready.active { background: #16a34a; }
+    .filter-btn.today.active { background: #15803d; }
+    .filter-btn.doesnt.active { background: #4b5563; }
+
+    #map {
+      width: 100%;
+      height: 520px;
+      border-radius: 16px;
+      border: 1px solid #cbd5e1;
+      overflow: hidden;
+    }
+
+    .map-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #374151;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-green { background: #16a34a; }
+    .dot-orange { background: #ea580c; }
+    .dot-red { background: #dc2626; }
+    .dot-gray { background: #4b5563; }
+
+    .map-marker {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .marker-open { background: #ea580c; }
+    .marker-ready { background: #16a34a; }
+    .marker-closed { background: #dc2626; }
+    .marker-doesnt { background: #4b5563; }
+
+    .popup-title {
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 99;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.82);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal img {
+      max-width: 94%;
+      max-height: 90%;
+      border-radius: 14px;
+      background: white;
+      padding: 5px;
+    }
+
+    .close {
+      position: absolute;
+      right: 30px;
+      top: 18px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media(max-width: 1050px) {
+      .kpi-grid,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width: 700px) {
+      .brand-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .logo {
+        height: 48px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      #map {
+        height: 430px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="brand-row">
+    <img class="logo" src="https://i.ibb.co/BVZkzhG3/image.png" alt="Logo">
+    <h1>Party Onboarding Project</h1>
+  </div>
+
+  <div class="state-row">
+    <div class="state-label">Select State:</div>
+
+    <div class="state-buttons">
+      <button class="state-btn active" id="btnUP" onclick="changeSheet('UP')">Uttar Pradesh</button>
+      <button class="state-btn" id="btnMP" onclick="changeSheet('MP')">Madhya Pradesh</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="loading" class="loading">Loading data...</div>
+
+  <div class="kpi-grid">
+
+    <div class="panel">
+      <h2>Overall KPI</h2>
+
+      <div class="cards">
+        <div class="card green">
+          <h3 id="overallVisited">0</h3>
+          <p>Total Party Visited</p>
+        </div>
+
+        <div class="card orange">
+          <h3 id="overallOpen">0</h3>
+          <p>Open</p>
+        </div>
+
+        <div class="card purple">
+          <h3 id="overallReady">0</h3>
+          <p>Onboarded</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel today-panel">
+      <h2>Today’s KPI</h2>
+
+      <div class="cards">
+        <div class="card green">
+          <h3 id="todayVisited">0</h3>
+          <p>Total Party Visited</p>
+        </div>
+
+        <div class="card orange">
+          <h3 id="todayOpen">0</h3>
+          <p>Open</p>
+        </div>
+
+        <div class="card purple">
+          <h3 id="todayReady">0</h3>
+          <p>Onboarded</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="summary-grid">
+
+    <div class="panel">
+      <h2>Overall Sales Team Summary</h2>
+
+      <div class="table-wrap">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Sales Team</th>
+              <th>Total Party Visited</th>
+              <th>Open</th>
+              <th>Onboarded</th>
+            </tr>
+          </thead>
+          <tbody id="overallSalesTeamTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel today-panel">
+      <h2>Today’s Sales Team Summary</h2>
+
+      <div class="table-wrap">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Sales Team</th>
+              <th>Total Party Visited</th>
+              <th>Open</th>
+              <th>Onboarded</th>
+            </tr>
+          </thead>
+          <tbody id="todaySalesTeamTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="summary-grid">
+
+    <div class="panel">
+      <h2>Overall District Summary</h2>
+
+      <div class="table-wrap">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>District</th>
+              <th>Total Party Visited</th>
+              <th>Open</th>
+              <th>Onboarded</th>
+            </tr>
+          </thead>
+          <tbody id="overallDistrictTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel today-panel">
+      <h2>Today’s District Summary</h2>
+
+      <div class="table-wrap">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>District</th>
+              <th>Total Party Visited</th>
+              <th>Open</th>
+              <th>Onboarded</th>
+            </tr>
+          </thead>
+          <tbody id="todayDistrictTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="box">
+    <h2>Visited Location Map</h2>
+
+    <div class="map-legend">
+      <div class="legend-item"><span class="dot dot-green"></span> Onboarded</div>
+      <div class="legend-item"><span class="dot dot-orange"></span> Open</div>
+      <div class="legend-item"><span class="dot dot-red"></span> Closed</div>
+      <div class="legend-item"><span class="dot dot-gray"></span> Doesn't exist</div>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active" id="mapAll" onclick="setMapFilter('all')">All</button>
+      <button class="filter-btn today" id="mapToday" onclick="setMapFilter('today')">Today</button>
+      <button class="filter-btn ready" id="mapReady" onclick="setMapFilter('ready')">Onboarded</button>
+      <button class="filter-btn open" id="mapOpen" onclick="setMapFilter('open')">Open</button>
+      <button class="filter-btn closed" id="mapClosed" onclick="setMapFilter('closed')">Closed</button>
+      <button class="filter-btn doesnt" id="mapDoesnt" onclick="setMapFilter('doesnt')">Doesn't exist</button>
+    </div>
+
+    <div id="map"></div>
+  </div>
+
+  <div class="box">
+    <h2>Party List With Photos</h2>
+
+    <div class="filter-row">
+      <button class="filter-btn active" id="partyAll" onclick="setPartyFilter('all')">All</button>
+      <button class="filter-btn ready" id="partyReady" onclick="setPartyFilter('ready')">Onboarded</button>
+      <button class="filter-btn open" id="partyOpen" onclick="setPartyFilter('open')">Open</button>
+      <button class="filter-btn closed" id="partyClosed" onclick="setPartyFilter('closed')">Closed</button>
+      <button class="filter-btn doesnt" id="partyDoesnt" onclick="setPartyFilter('doesnt')">Doesn't exist</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="party-table">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>RTR Code</th>
+            <th>Party Name</th>
+            <th>State</th>
+            <th>District</th>
+            <th>Tehsil</th>
+            <th>Town</th>
+            <th>Sales Team</th>
+            <th>Status</th>
+            <th>Owner</th>
+            <th>Phone</th>
+            <th>Onboarded</th>
+            <th>Distance from Centre</th>
+            <th>Submission Time</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody id="partyTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div id="imageModal" class="modal" onclick="closeImage()">
+  <span class="close">&times;</span>
+  <img id="modalImage">
+</div>
+
+<script>
+  const SHEET_ID = "1jJta6wOibBHmrqmWQeq-BgYixVUoC1U1ZvX9SxyO8Oo";
+
+  const SHEETS = {
+    UP: {
+      name: "Uttar Pradesh",
+      gid: "0"
+    },
+    MP: {
+      name: "Madhya Pradesh",
+      gid: "1101100608"
+    }
+  };
+
+  let currentSheet = "UP";
+
+  let rawData = [];
+  let submittedData = [];
+  let partyFilter = "all";
+  let mapFilter = "all";
+
+  let map;
+  let mapMarkers = [];
+  let currentScript = null;
+
+  window.onload = function() {
+    loadSheet("UP");
+  };
+
+  function changeSheet(sheetKey) {
+    currentSheet = sheetKey;
+
+    document.getElementById("btnUP").classList.remove("active");
+    document.getElementById("btnMP").classList.remove("active");
+
+    if (sheetKey === "UP") document.getElementById("btnUP").classList.add("active");
+    if (sheetKey === "MP") document.getElementById("btnMP").classList.add("active");
+
+    partyFilter = "all";
+    mapFilter = "all";
+
+    resetFilterButtons();
+    loadSheet(sheetKey);
+  }
+
+  function loadSheet(sheetKey) {
+    rawData = [];
+    submittedData = [];
+
+    clearDashboard();
+    clearMapMarkers();
+
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("loading").innerHTML = "Loading " + SHEETS[sheetKey].name + " data...";
+
+    if (currentScript) {
+      currentScript.remove();
+    }
+
+    const url =
+      "https://docs.google.com/spreadsheets/d/" +
+      SHEET_ID +
+      "/gviz/tq?gid=" +
+      SHEETS[sheetKey].gid +
+      "&tqx=responseHandler:handleSheetData" +
+      "&cacheBust=" +
+      Date.now();
+
+    currentScript = document.createElement("script");
+    currentScript.src = url;
+    document.body.appendChild(currentScript);
+  }
+
+  function handleSheetData(response) {
+    try {
+      const rows = response.table.rows;
+
+      rawData = rows.map(r => {
+        const c = r.c;
+
+        return {
+          rtr: getValue(c, 0),
+          state: getValue(c, 1),
+          party: getValue(c, 2),
+          latitude: getValue(c, 3),
+          longitude: getValue(c, 4),
+          district: getValue(c, 5),
+          tehsil: getValue(c, 6),
+          town: getValue(c, 7),
+          verified: getValue(c, 9),
+          submissionTime: getValue(c, 10),
+          sde: getValue(c, 11),
+          liveLat: getValue(c, 12),
+          liveLong: getValue(c, 13),
+          distance: getValue(c, 14),
+          status: getValue(c, 15),
+          photo: getValue(c, 16),
+          owner: getValue(c, 17),
+          phone: getValue(c, 18),
+          ready: getValue(c, 19),
+          remarks: getValue(c, 21)
+        };
+      });
+
+      submittedData = rawData.filter(row => {
+        return (
+          String(row.submissionTime || "").trim() !== "" &&
+          String(row.sde || "").trim() !== ""
+        );
+      });
+
+      document.getElementById("loading").style.display = "none";
+      renderDashboard();
+
+    } catch (error) {
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("loading").innerHTML =
+        "Data loading failed. Check sheet sharing permission and column order.";
+    }
+  }
+
+  function getValue(cells, index) {
+    if (!cells[index]) return "";
+    return cells[index].f || cells[index].v || "";
+  }
+
+  function clearDashboard() {
+    document.getElementById("overallVisited").innerText = "0";
+    document.getElementById("overallOpen").innerText = "0";
+    document.getElementById("overallReady").innerText = "0";
+
+    document.getElementById("todayVisited").innerText = "0";
+    document.getElementById("todayOpen").innerText = "0";
+    document.getElementById("todayReady").innerText = "0";
+
+    document.getElementById("overallSalesTeamTable").innerHTML = "";
+    document.getElementById("todaySalesTeamTable").innerHTML = "";
+    document.getElementById("overallDistrictTable").innerHTML = "";
+    document.getElementById("todayDistrictTable").innerHTML = "";
+    document.getElementById("partyTable").innerHTML = "";
+  }
+
+  function renderDashboard() {
+    const todayData = getTodayData();
+
+    renderKPICards(submittedData, "overall");
+    renderKPICards(todayData, "today");
+
+    renderGroupSummary(submittedData, "sde", "overallSalesTeamTable");
+    renderGroupSummary(todayData, "sde", "todaySalesTeamTable");
+
+    renderGroupSummary(submittedData, "district", "overallDistrictTable");
+    renderGroupSummary(todayData, "district", "todayDistrictTable");
+
+    renderMap();
+    renderPartyTable();
+  }
+
+  function statusText(row) {
+    return String(row.status || "").toLowerCase().trim();
+  }
+
+  function isDoesntExist(row) {
+    const s = statusText(row);
+    return (
+      s.includes("doesn't exist") ||
+      s.includes("doesnt exist") ||
+      s.includes("does not exist") ||
+      s.includes("not exist")
+    );
+  }
+
+  function isOpen(row) {
+    return statusText(row) === "open";
+  }
+
+  function isReady(row) {
+    return (
+      !isDoesntExist(row) &&
+      (
+        String(row.ready || "").toLowerCase() === "yes" ||
+        statusText(row).includes("onboard")
+      )
+    );
+  }
+
+  function isClosed(row) {
+    return !isOpen(row) && !isReady(row) && !isDoesntExist(row);
+  }
+
+  function getStatusType(row) {
+    if (isDoesntExist(row)) return "doesnt";
+    if (isReady(row)) return "ready";
+    if (isOpen(row)) return "open";
+    return "closed";
+  }
+
+  function renderKPICards(data, type) {
+    document.getElementById(type + "Visited").innerText = data.length;
+    document.getElementById(type + "Open").innerText = data.filter(isOpen).length;
+    document.getElementById(type + "Ready").innerText = data.filter(isReady).length;
+  }
+
+  function getTodayData() {
+    const today = new Date();
+
+    return submittedData.filter(row => {
+      const parsedDate = parseFlexibleDate(row.submissionTime);
+      if (!parsedDate) return false;
+
+      return (
+        parsedDate.getDate() === today.getDate() &&
+        parsedDate.getMonth() === today.getMonth() &&
+        parsedDate.getFullYear() === today.getFullYear()
+      );
+    });
+  }
+
+  function parseFlexibleDate(value) {
+    if (!value) return null;
+
+    const text = String(value).trim();
+    const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,\s*(.*))?/);
+
+    if (!match) return null;
+
+    let first = Number(match[1]);
+    let second = Number(match[2]);
+    let year = Number(match[3]);
+    let timePart = match[4] || "00:00:00";
+
+    let day;
+    let month;
+
+    if (first > 12) {
+      day = first;
+      month = second;
+    } else if (second > 12) {
+      month = first;
+      day = second;
+    } else {
+      day = first;
+      month = second;
+    }
+
+    let hour = 0;
+    let minute = 0;
+    let secondValue = 0;
+
+    const timeMatch = timePart.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
+
+    if (timeMatch) {
+      hour = Number(timeMatch[1]);
+      minute = Number(timeMatch[2]);
+      secondValue = Number(timeMatch[3] || 0);
+
+      const meridian = timeMatch[4];
+
+      if (meridian) {
+        if (meridian.toUpperCase() === "PM" && hour < 12) hour += 12;
+        if (meridian.toUpperCase() === "AM" && hour === 12) hour = 0;
+      }
+    }
+
+    return new Date(year, month - 1, day, hour, minute, secondValue);
+  }
+
+  function renderGroupSummary(data, groupKey, tableId) {
+    const summary = {};
+
+    data.forEach(row => {
+      const groupName = String(row[groupKey] || "").trim();
+      if (!groupName) return;
+
+      if (!summary[groupName]) {
+        summary[groupName] = {
+          total: 0,
+          open: 0,
+          ready: 0
+        };
+      }
+
+      summary[groupName].total++;
+
+      if (isOpen(row)) summary[groupName].open++;
+      if (isReady(row)) summary[groupName].ready++;
+    });
+
+    let html = "";
+
+    Object.keys(summary)
+      .sort((a, b) => summary[b].total - summary[a].total)
+      .forEach(name => {
+        html += `
+          <tr>
+            <td><b>${safe(name)}</b></td>
+            <td>${summary[name].total}</td>
+            <td>${summary[name].open}</td>
+            <td>${summary[name].ready}</td>
+          </tr>
+        `;
+      });
+
+    const validRows = data.filter(row => String(row[groupKey] || "").trim() !== "");
+
+    if (validRows.length > 0) {
+      html += `
+        <tr class="summary-row">
+          <td>Total</td>
+          <td>${validRows.length}</td>
+          <td>${validRows.filter(isOpen).length}</td>
+          <td>${validRows.filter(isReady).length}</td>
+        </tr>
+      `;
+    }
+
+    if (validRows.length === 0) {
+      html = `
+        <tr>
+          <td colspan="4" style="text-align:center; color:#64748b; font-weight:bold;">
+            No data available
+          </td>
+        </tr>
+      `;
+    }
+
+    document.getElementById(tableId).innerHTML = html;
+  }
+
+  function initMapIfNeeded() {
+    if (map) return;
+
+    map = L.map("map").setView([23.5, 80], 5);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "© OpenStreetMap"
+    }).addTo(map);
+  }
+
+  function renderMap() {
+    initMapIfNeeded();
+    clearMapMarkers();
+
+    const rows = getMapRows();
+    const bounds = [];
+
+    rows.forEach(row => {
+      const coords = getBestCoordinates(row);
+      if (!coords) return;
+
+      const statusType = getStatusType(row);
+
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="map-marker marker-${statusType}"></div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+      });
+
+      const marker = L.marker([coords.lat, coords.lng], { icon }).addTo(map);
+
+      marker.bindPopup(`
+        <div class="popup-title">${safe(display(row.party))}</div>
+        <div><b>Status:</b> ${getStatusLabel(row)}</div>
+        <div><b>Sales Team:</b> ${safe(display(row.sde))}</div>
+        <div><b>District:</b> ${safe(display(row.district))}</div>
+        <div><b>Town:</b> ${safe(display(row.town))}</div>
+        <div><b>Owner:</b> ${safe(display(row.owner))}</div>
+        <div><b>Phone:</b> ${safe(display(row.phone))}</div>
+        <div><b>Distance from Centre:</b> ${safe(display(row.distance))} m</div>
+      `);
+
+      mapMarkers.push(marker);
+      bounds.push([coords.lat, coords.lng]);
+    });
+
+    setTimeout(() => {
+      map.invalidateSize();
+
+      if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [30, 30] });
+      } else {
+        map.setView([23.5, 80], 5);
+      }
+    }, 150);
+  }
+
+  function clearMapMarkers() {
+    if (!map) return;
+
+    mapMarkers.forEach(marker => map.removeLayer(marker));
+    mapMarkers = [];
+  }
+
+  function getMapRows() {
+    if (mapFilter === "today") return getTodayData();
+    if (mapFilter === "ready") return submittedData.filter(isReady);
+    if (mapFilter === "open") return submittedData.filter(isOpen);
+    if (mapFilter === "closed") return submittedData.filter(isClosed);
+    if (mapFilter === "doesnt") return submittedData.filter(isDoesntExist);
+    return submittedData;
+  }
+
+  function getBestCoordinates(row) {
+    let lat = parseCoordinate(row.liveLat);
+    let lng = parseCoordinate(row.liveLong);
+
+    if (!isValidLatLng(lat, lng)) {
+      lat = parseCoordinate(row.latitude);
+      lng = parseCoordinate(row.longitude);
+    }
+
+    if (!isValidLatLng(lat, lng)) return null;
+
+    return { lat, lng };
+  }
+
+  function parseCoordinate(value) {
+    const n = parseFloat(String(value || "").trim());
+    return isNaN(n) ? null : n;
+  }
+
+  function isValidLatLng(lat, lng) {
+    return (
+      lat !== null &&
+      lng !== null &&
+      lat >= -90 &&
+      lat <= 90 &&
+      lng >= -180 &&
+      lng <= 180 &&
+      !(lat === 0 && lng === 0)
+    );
+  }
+
+  function setMapFilter(type) {
+    mapFilter = type;
+
+    ["mapAll", "mapToday", "mapReady", "mapOpen", "mapClosed", "mapDoesnt"].forEach(id => {
+      document.getElementById(id).classList.remove("active");
+    });
+
+    if (type === "all") document.getElementById("mapAll").classList.add("active");
+    if (type === "today") document.getElementById("mapToday").classList.add("active");
+    if (type === "ready") document.getElementById("mapReady").classList.add("active");
+    if (type === "open") document.getElementById("mapOpen").classList.add("active");
+    if (type === "closed") document.getElementById("mapClosed").classList.add("active");
+    if (type === "doesnt") document.getElementById("mapDoesnt").classList.add("active");
+
+    renderMap();
+  }
+
+  function setPartyFilter(type) {
+    partyFilter = type;
+
+    ["partyAll", "partyReady", "partyOpen", "partyClosed", "partyDoesnt"].forEach(id => {
+      document.getElementById(id).classList.remove("active");
+    });
+
+    if (type === "all") document.getElementById("partyAll").classList.add("active");
+    if (type === "ready") document.getElementById("partyReady").classList.add("active");
+    if (type === "open") document.getElementById("partyOpen").classList.add("active");
+    if (type === "closed") document.getElementById("partyClosed").classList.add("active");
+    if (type === "doesnt") document.getElementById("partyDoesnt").classList.add("active");
+
+    renderPartyTable();
+  }
+
+  function resetFilterButtons() {
+    ["mapAll", "mapToday", "mapReady", "mapOpen", "mapClosed", "mapDoesnt"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("active");
+    });
+
+    ["partyAll", "partyReady", "partyOpen", "partyClosed", "partyDoesnt"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("active");
+    });
+
+    document.getElementById("mapAll").classList.add("active");
+    document.getElementById("partyAll").classList.add("active");
+  }
+
+  function getPartyListData() {
+    if (partyFilter === "ready") return submittedData.filter(isReady);
+    if (partyFilter === "open") return submittedData.filter(isOpen);
+    if (partyFilter === "closed") return submittedData.filter(isClosed);
+    if (partyFilter === "doesnt") return submittedData.filter(isDoesntExist);
+    return submittedData;
+  }
+
+  function renderPartyTable() {
+    let html = "";
+    const partyRows = getPartyListData();
+
+    partyRows.forEach(row => {
+      const salesTeam = String(row.sde || "").trim();
+
+      const statusBadge = getStatusBadge(row);
+
+      const readyBadge = isReady(row)
+        ? `<span class="badge badge-ready">Yes</span>`
+        : `<span class="badge badge-no">No</span>`;
+
+      const imageUrl = getDriveImage(row.photo);
+
+      const photoHtml = imageUrl
+        ? `<img src="${imageUrl}" class="photo" onclick="openImage('${imageUrl}')">`
+        : `<span class="no-photo">No Photo</span>`;
+
+      html += `
+        <tr>
+          <td>${photoHtml}</td>
+          <td>${safe(display(row.rtr))}</td>
+          <td class="party-name">${safe(display(row.party))}</td>
+          <td>${safe(display(row.state))}</td>
+          <td>${safe(display(row.district))}</td>
+          <td>${safe(display(row.tehsil))}</td>
+          <td>${safe(display(row.town))}</td>
+          <td>${safe(salesTeam)}</td>
+          <td>${statusBadge}</td>
+          <td>${safe(display(row.owner))}</td>
+          <td>${safe(display(row.phone))}</td>
+          <td>${readyBadge}</td>
+          <td>${safe(display(row.distance))} m</td>
+          <td>${safe(display(row.submissionTime))}</td>
+          <td>${safe(display(row.remarks))}</td>
+        </tr>
+      `;
+    });
+
+    if (partyRows.length === 0) {
+      html = `
+        <tr>
+          <td colspan="15" style="text-align:center; color:#64748b; font-weight:bold;">
+            No party found for selected filter
+          </td>
+        </tr>
+      `;
+    }
+
+    document.getElementById("partyTable").innerHTML = html;
+  }
+
+  function getStatusLabel(row) {
+    if (isDoesntExist(row)) return "Doesn't exist";
+    if (isReady(row)) return "Onboarded";
+    if (isOpen(row)) return "Open";
+    return display(row.status, "Closed");
+  }
+
+  function getStatusBadge(row) {
+    if (isDoesntExist(row)) {
+      return `<span class="badge badge-doesnt">Doesn't exist</span>`;
+    }
+
+    if (isReady(row)) {
+      return `<span class="badge badge-ready">Onboarded</span>`;
+    }
+
+    if (isOpen(row)) {
+      return `<span class="badge badge-open">Open</span>`;
+    }
+
+    return `<span class="badge badge-closed">${safe(display(row.status, "Closed"))}</span>`;
+  }
+
+  function display(value, fallback = "Not Available") {
+    const cleaned = String(value || "").trim();
+    return cleaned ? cleaned : fallback;
+  }
+
+  function getDriveImage(url) {
+    if (!url) return "";
+
+    const text = String(url);
+    const match = text.match(/\/d\/([^/]+)/);
+
+    if (match && match[1]) {
+      return "https://drive.google.com/thumbnail?id=" + match[1] + "&sz=w1400";
+    }
+
+    return text;
+  }
+
+  function openImage(src) {
+    document.getElementById("modalImage").src = src;
+    document.getElementById("imageModal").style.display = "flex";
+  }
+
+  function closeImage() {
+    document.getElementById("imageModal").style.display = "none";
+  }
+
+  function safe(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  setTimeout(() => {
+    if (submittedData.length === 0) {
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("loading").innerHTML =
+        "No submitted work found. Check Submission_Time, Sales Team and sheet sharing permission.";
+    }
+  }, 8000);
+</script>
+
+</body>
+</html>
