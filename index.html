@@ -674,7 +674,7 @@
       <div class="legend-item"><span class="dot dot-green"></span> Onboarded</div>
       <div class="legend-item"><span class="dot dot-orange"></span> Open</div>
       <div class="legend-item"><span class="dot dot-red"></span> Closed</div>
-      <div class="legend-item"><span class="dot dot-gray"></span> Doesn't exist</div>
+      <div class="legend-item"><span class="dot dot-gray"></span> Doesn’t exist</div>
     </div>
 
     <div class="filter-row">
@@ -683,7 +683,7 @@
       <button class="filter-btn ready" id="mapReady" onclick="setMapFilter('ready')">Onboarded</button>
       <button class="filter-btn open" id="mapOpen" onclick="setMapFilter('open')">Open</button>
       <button class="filter-btn closed" id="mapClosed" onclick="setMapFilter('closed')">Closed</button>
-      <button class="filter-btn doesnt" id="mapDoesnt" onclick="setMapFilter('doesnt')">Doesn't exist</button>
+      <button class="filter-btn doesnt" id="mapDoesnt" onclick="setMapFilter('doesnt')">Doesn’t exist</button>
     </div>
 
     <div id="map"></div>
@@ -697,7 +697,7 @@
       <button class="filter-btn ready" id="partyReady" onclick="setPartyFilter('ready')">Onboarded</button>
       <button class="filter-btn open" id="partyOpen" onclick="setPartyFilter('open')">Open</button>
       <button class="filter-btn closed" id="partyClosed" onclick="setPartyFilter('closed')">Closed</button>
-      <button class="filter-btn doesnt" id="partyDoesnt" onclick="setPartyFilter('doesnt')">Doesn't exist</button>
+      <button class="filter-btn doesnt" id="partyDoesnt" onclick="setPartyFilter('doesnt')">Doesn’t exist</button>
     </div>
 
     <div class="table-wrap">
@@ -895,8 +895,16 @@
     return String(row.status || "").toLowerCase().trim();
   }
 
+  function normalizedStatusText(row) {
+    return statusText(row)
+      .replace(/[’‘`´]/g, "'")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
   function isDoesntExist(row) {
-    const s = statusText(row);
+    const s = normalizedStatusText(row);
+
     return (
       s.includes("doesn't exist") ||
       s.includes("doesnt exist") ||
@@ -1278,7 +1286,7 @@
   }
 
   function getStatusLabel(row) {
-    if (isDoesntExist(row)) return "Doesn't exist";
+    if (isDoesntExist(row)) return "Doesn’t exist";
     if (isReady(row)) return "Onboarded";
     if (isOpen(row)) return "Open";
     return display(row.status, "Closed");
@@ -1286,7 +1294,7 @@
 
   function getStatusBadge(row) {
     if (isDoesntExist(row)) {
-      return `<span class="badge badge-doesnt">Doesn't exist</span>`;
+      return `<span class="badge badge-doesnt">Doesn’t exist</span>`;
     }
 
     if (isReady(row)) {
