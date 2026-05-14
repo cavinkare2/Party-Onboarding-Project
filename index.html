@@ -335,6 +335,29 @@
       background: #1d4ed8;
     }
 
+    .box-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+
+    .box-title-row h2 {
+      margin: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+      flex: 1;
+      text-align: center;
+    }
+
+    .box-title-row .download-btn {
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
     .filter-btn.open.active { background: #ea580c; }
     .filter-btn.closed.active { background: #dc2626; }
     .filter-btn.ready.active { background: #16a34a; }
@@ -637,7 +660,10 @@
   </div>
 
   <div class="box">
-    <h2>Party List With Photos</h2>
+    <div class="box-title-row">
+      <h2>Party List With Photos</h2>
+      <button class="download-btn" onclick="downloadExcelDump()">Download Excel Dump</button>
+    </div>
 
     <div class="filter-row">
       <button class="filter-btn active" id="partyAll" onclick="setPartyFilter('all')">All</button>
@@ -645,10 +671,6 @@
       <button class="filter-btn open" id="partyOpen" onclick="setPartyFilter('open')">Open</button>
       <button class="filter-btn closed" id="partyClosed" onclick="setPartyFilter('closed')">Closed</button>
       <button class="filter-btn doesnt" id="partyDoesnt" onclick="setPartyFilter('doesnt')">Doesn't exist</button>
-    </div>
-
-    <div class="download-row">
-      <button class="download-btn" onclick="downloadExcelDump()">Download Excel Dump</button>
     </div>
 
     <div class="table-wrap">
