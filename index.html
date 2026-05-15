@@ -216,7 +216,7 @@
       background: white;
     }
 
-    .party-table { min-width: 1450px; }
+    .party-table { min-width: 1600px; }
     .summary-table { min-width: 520px; }
 
     th {
@@ -276,6 +276,29 @@
     .badge-no {
       background: #fef3c7;
       color: #92400e;
+    }
+
+    .activation-date-box {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: #dcfce7;
+      color: #14532d;
+      border: 1px solid #86efac;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+      min-width: 120px;
+    }
+
+    .activation-date-empty {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #cbd5e1;
+      font-weight: 700;
+      min-width: 120px;
     }
 
     .party-name {
@@ -716,6 +739,7 @@
             <th>Owner</th>
             <th>Phone</th>
             <th>Onboarded</th>
+            <th>Estimated Activation Date</th>
             <th>Distance from Centre</th>
             <th>Submission Time</th>
             <th>Remarks</th>
@@ -809,31 +833,44 @@
   function handleSheetData(response) {
     try {
       const rows = response.table.rows;
+      const headerMap = buildHeaderMap(response.table.cols || []);
 
       rawData = rows.map(r => {
         const c = r.c;
 
         return {
-          rtr: getValue(c, 0),
-          state: getValue(c, 1),
-          party: getValue(c, 2),
-          latitude: getValue(c, 3),
-          longitude: getValue(c, 4),
-          district: getValue(c, 5),
-          tehsil: getValue(c, 6),
-          town: getValue(c, 7),
-          verified: getValue(c, 9),
-          submissionTime: getValue(c, 10),
-          sde: getValue(c, 11),
-          liveLat: getValue(c, 12),
-          liveLong: getValue(c, 13),
-          distance: getValue(c, 14),
-          status: getValue(c, 15),
-          photo: getValue(c, 16),
-          owner: getValue(c, 17),
-          phone: getValue(c, 18),
-          ready: getValue(c, 19),
-          remarks: getValue(c, 21)
+          rtr: getByHeader(c, headerMap, ["RTR Code", "RTR_Code", "RTR"], [0]),
+          state: getByHeader(c, headerMap, ["State"], [1]),
+          party: getByHeader(c, headerMap, ["Party Name", "Party_Name", "Party"], [2]),
+          latitude: getByHeader(c, headerMap, ["Latitude", "Lat"], [3]),
+          longitude: getByHeader(c, headerMap, ["Longitude", "Long", "Lng"], [4]),
+          district: getByHeader(c, headerMap, ["District"], [5]),
+          tehsil: getByHeader(c, headerMap, ["Tehsil"], [6]),
+          town: getByHeader(c, headerMap, ["Town"], [7]),
+          verified: getByHeader(c, headerMap, ["Verified", "Verification Status"], [9]),
+          submissionTime: getByHeader(c, headerMap, ["Submission Time", "Submission_Time", "Timestamp", "Time Stamp"], [10]),
+          sde: getByHeader(c, headerMap, ["Sales Team", "Sales_Team", "SDE"], [11]),
+          liveLat: getByHeader(c, headerMap, ["Live Lat", "Live_Lat", "Live Latitude"], [12]),
+          liveLong: getByHeader(c, headerMap, ["Live Long", "Live_Long", "Live Longitude"], [13]),
+          distance: getByHeader(c, headerMap, ["Distance from Centre", "Distance_from_Centre", "Distance"], [14]),
+          status: getByHeader(c, headerMap, ["Status"], [15]),
+          photo: getByHeader(c, headerMap, ["Photo", "Photo Link", "Image", "Image Link"], [16]),
+          owner: getByHeader(c, headerMap, ["Owner", "Owner Name", "Owner_Name"], [17]),
+          phone: getByHeader(c, headerMap, ["Phone", "Phone Number", "Mobile", "Mobile Number"], [18]),
+          ready: getByHeader(c, headerMap, ["Onboarded", "Ready", "Ready for Onboarding"], [19]),
+          estimatedActivationDate: getByHeader(
+            c,
+            headerMap,
+            [
+              "Estimated_Activation_Date",
+              "Estimated Activation Date",
+              "EstimatedActivationDate",
+              "Activation Date",
+              "Estimated Activation"
+            ],
+            [22, 20]
+          ),
+          remarks: getByHeader(c, headerMap, ["Remarks", "Remark", "Comments", "Comment"], [21, 22])
         };
       });
 
@@ -857,6 +894,48 @@
   function getValue(cells, index) {
     if (!cells[index]) return "";
     return cells[index].f || cells[index].v || "";
+  }
+
+  function normalizeHeader(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+  }
+
+  function buildHeaderMap(cols) {
+    const map = {};
+
+    cols.forEach((col, index) => {
+      [col.label, col.id].forEach(name => {
+        const key = normalizeHeader(name);
+
+        if (key && map[key] === undefined) {
+          map[key] = index;
+        }
+      });
+    });
+
+    return map;
+  }
+
+  function getByHeader(cells, headerMap, aliases, fallbackIndexes) {
+    for (const alias of aliases) {
+      const key = normalizeHeader(alias);
+
+      if (headerMap[key] !== undefined) {
+        return getValue(cells, headerMap[key]);
+      }
+    }
+
+    for (const index of fallbackIndexes || []) {
+      const value = getValue(cells, index);
+
+      if (String(value || "").trim() !== "") {
+        return value;
+      }
+    }
+
+    return "";
   }
 
   function clearDashboard() {
@@ -1111,6 +1190,7 @@
         <div><b>Town:</b> ${safe(display(row.town))}</div>
         <div><b>Owner:</b> ${safe(display(row.owner))}</div>
         <div><b>Phone:</b> ${safe(display(row.phone))}</div>
+        <div><b>Estimated Activation:</b> ${safe(display(row.estimatedActivationDate))}</div>
         <div><b>Distance from Centre:</b> ${safe(display(row.distance))} m</div>
       `);
 
@@ -1232,6 +1312,16 @@
     return submittedData;
   }
 
+  function getActivationDateBox(value) {
+    const text = String(value || "").trim();
+
+    if (!text) {
+      return `<span class="activation-date-empty">Not Available</span>`;
+    }
+
+    return `<span class="activation-date-box">${safe(text)}</span>`;
+  }
+
   function renderPartyTable() {
     let html = "";
     const partyRows = getPartyListData();
@@ -1244,6 +1334,8 @@
       const readyBadge = isReady(row)
         ? `<span class="badge badge-ready">Yes</span>`
         : `<span class="badge badge-no">No</span>`;
+
+      const activationDateHtml = getActivationDateBox(row.estimatedActivationDate);
 
       const imageUrl = getDriveImage(row.photo);
 
@@ -1265,6 +1357,7 @@
           <td>${safe(display(row.owner))}</td>
           <td>${safe(display(row.phone))}</td>
           <td>${readyBadge}</td>
+          <td>${activationDateHtml}</td>
           <td>${safe(display(row.distance))} m</td>
           <td>${safe(display(row.submissionTime))}</td>
           <td>${safe(display(row.remarks))}</td>
@@ -1275,7 +1368,7 @@
     if (partyRows.length === 0) {
       html = `
         <tr>
-          <td colspan="15" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="16" style="text-align:center; color:#64748b; font-weight:bold;">
             No party found for selected filter
           </td>
         </tr>
@@ -1344,6 +1437,7 @@
       "Owner Name",
       "Phone Number",
       "Onboarded",
+      "Estimated Activation Date",
       "Photo Link",
       "Remarks"
     ];
@@ -1380,6 +1474,7 @@
         row.owner,
         row.phone,
         onboarded,
+        row.estimatedActivationDate,
         row.photo,
         row.remarks
       ];
