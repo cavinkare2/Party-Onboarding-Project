@@ -216,7 +216,7 @@
       background: white;
     }
 
-    .party-table { min-width: 1600px; }
+    .party-table { min-width: 1750px; }
     .summary-table { min-width: 520px; }
 
     th {
@@ -734,6 +734,7 @@
             <th>District</th>
             <th>Tehsil</th>
             <th>Town</th>
+            <th>Estimated Outlet Universe</th>
             <th>Sales Team</th>
             <th>Status</th>
             <th>Owner</th>
@@ -847,6 +848,19 @@
           district: getByHeader(c, headerMap, ["District"], [5]),
           tehsil: getByHeader(c, headerMap, ["Tehsil"], [6]),
           town: getByHeader(c, headerMap, ["Town"], [7]),
+          estimatedOutletUniverse: getByHeader(
+            c,
+            headerMap,
+            [
+              "Estimated_Outlet_Universe",
+              "Estimated Outlet Universe",
+              "EstimatedOutletUniverse",
+              "Estimated Outlet_Universe",
+              "Outlet Universe",
+              "Estimated Universe"
+            ],
+            []
+          ),
           verified: getByHeader(c, headerMap, ["Verified", "Verification Status"], [9]),
           submissionTime: getByHeader(c, headerMap, ["Submission Time", "Submission_Time", "Timestamp", "Time Stamp"], [10]),
           sde: getByHeader(c, headerMap, ["Sales Team", "Sales_Team", "SDE"], [11]),
@@ -1188,6 +1202,7 @@
         <div><b>Sales Team:</b> ${safe(display(row.sde))}</div>
         <div><b>District:</b> ${safe(display(row.district))}</div>
         <div><b>Town:</b> ${safe(display(row.town))}</div>
+        <div><b>Estimated Outlet Universe:</b> ${safe(display(row.estimatedOutletUniverse))}</div>
         <div><b>Owner:</b> ${safe(display(row.owner))}</div>
         <div><b>Phone:</b> ${safe(display(row.phone))}</div>
         <div><b>Estimated Activation:</b> ${safe(display(row.estimatedActivationDate))}</div>
@@ -1352,6 +1367,7 @@
           <td>${safe(display(row.district))}</td>
           <td>${safe(display(row.tehsil))}</td>
           <td>${safe(display(row.town))}</td>
+          <td>${safe(display(row.estimatedOutletUniverse))}</td>
           <td>${safe(salesTeam)}</td>
           <td>${statusBadge}</td>
           <td>${safe(display(row.owner))}</td>
@@ -1368,7 +1384,7 @@
     if (partyRows.length === 0) {
       html = `
         <tr>
-          <td colspan="16" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="17" style="text-align:center; color:#64748b; font-weight:bold;">
             No party found for selected filter
           </td>
         </tr>
@@ -1426,6 +1442,7 @@
       "District",
       "Tehsil",
       "Town",
+      "Estimated Outlet Universe",
       "Verified",
       "Submission Time",
       "Sales Team",
@@ -1463,6 +1480,7 @@
         row.district,
         row.tehsil,
         row.town,
+        row.estimatedOutletUniverse,
         row.verified,
         row.submissionTime,
         row.sde,
