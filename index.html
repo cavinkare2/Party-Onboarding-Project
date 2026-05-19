@@ -27,7 +27,6 @@
       position: relative;
     }
 
-
     .top-download-btn {
       position: absolute;
       top: 24px;
@@ -286,7 +285,6 @@
       color: #14532d;
       border: 1px solid #86efac;
       font-weight: 800;
-      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
       min-width: 120px;
     }
 
@@ -358,12 +356,6 @@
       color: white;
     }
 
-    .download-row {
-      display: flex;
-      justify-content: center;
-      margin: 0 0 16px;
-    }
-
     .download-btn {
       border: none;
       padding: 11px 22px;
@@ -377,29 +369,6 @@
 
     .download-btn:hover {
       background: #1d4ed8;
-    }
-
-    .box-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 10px;
-      margin-bottom: 16px;
-    }
-
-    .box-title-row h2 {
-      margin: 0;
-      border-bottom: none;
-      padding-bottom: 0;
-      flex: 1;
-      text-align: center;
-    }
-
-    .box-title-row .download-btn {
-      margin-left: auto;
-      white-space: nowrap;
     }
 
     .filter-btn.open.active { background: #ea580c; }
@@ -505,13 +474,13 @@
     }
 
     @media(max-width: 700px) {
-
       .top-download-btn {
         position: static;
         display: block;
         margin-bottom: 16px;
         width: fit-content;
       }
+
       .brand-row {
         align-items: flex-start;
         flex-direction: column;
@@ -556,6 +525,7 @@
     <div class="state-buttons">
       <button class="state-btn active" id="btnUP" onclick="changeSheet('UP')">Uttar Pradesh</button>
       <button class="state-btn" id="btnMP" onclick="changeSheet('MP')">Madhya Pradesh</button>
+      <button class="state-btn" id="btnMAH" onclick="changeSheet('MAH')">Maharashtra</button>
     </div>
   </div>
 </div>
@@ -757,7 +727,6 @@
   <span class="close">&times;</span>
   <img id="modalImage">
 </div>
-
 <script>
   const SHEET_ID = "1jJta6wOibBHmrqmWQeq-BgYixVUoC1U1ZvX9SxyO8Oo";
 
@@ -766,9 +735,15 @@
       name: "Uttar Pradesh",
       gid: "0"
     },
+
     MP: {
       name: "Madhya Pradesh",
       gid: "1101100608"
+    },
+
+    MAH: {
+      name: "Maharashtra",
+      gid: "1763207454"
     }
   };
 
@@ -792,9 +767,19 @@
 
     document.getElementById("btnUP").classList.remove("active");
     document.getElementById("btnMP").classList.remove("active");
+    document.getElementById("btnMAH").classList.remove("active");
 
-    if (sheetKey === "UP") document.getElementById("btnUP").classList.add("active");
-    if (sheetKey === "MP") document.getElementById("btnMP").classList.add("active");
+    if (sheetKey === "UP") {
+      document.getElementById("btnUP").classList.add("active");
+    }
+
+    if (sheetKey === "MP") {
+      document.getElementById("btnMP").classList.add("active");
+    }
+
+    if (sheetKey === "MAH") {
+      document.getElementById("btnMAH").classList.add("active");
+    }
 
     partyFilter = "all";
     mapFilter = "all";
@@ -1417,7 +1402,6 @@
     return `<span class="badge badge-closed">${safe(display(row.status, "Closed"))}</span>`;
   }
 
-
   function downloadExcelDump() {
     const rows = getPartyListData();
 
@@ -1546,7 +1530,6 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
   }
-
 
   function display(value, fallback = "Not Available") {
     const cleaned = String(value || "").trim();
