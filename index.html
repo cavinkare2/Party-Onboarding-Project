@@ -42,9 +42,7 @@
       z-index: 5;
     }
 
-    .top-download-btn:hover {
-      background: #f1f5f9;
-    }
+    .top-download-btn:hover { background: #f1f5f9; }
 
     .brand-row {
       display: flex;
@@ -122,6 +120,24 @@
       text-align: center;
     }
 
+    .database-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      margin-bottom: 26px;
+      border: 1px solid #dbeafe;
+    }
+
+    .database-panel h2 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+      text-align: center;
+    }
+
     .kpi-grid,
     .summary-grid {
       display: grid;
@@ -162,8 +178,53 @@
 
     .cards {
       display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    .database-cards {
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
+    }
+
+    .detail-toggle-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .detail-toggle-btn {
+      border: none;
+      padding: 11px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: bold;
+      background: #0f172a;
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    .detail-toggle-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .database-detail-box {
+      display: none;
+      margin-top: 18px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 18px;
+    }
+
+    .database-detail-box h3 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: 18px;
+      color: #111827;
+    }
+
+    .database-detail-table {
+      min-width: 900px;
     }
 
     .card {
@@ -174,13 +235,11 @@
       text-align: center;
     }
 
-    .today-panel .card {
-      background: #f0fdf4;
-    }
+    .today-panel .card { background: #f0fdf4; }
 
     .card h3 {
       margin: 0;
-      font-size: 38px;
+      font-size: 34px;
       color: #1d4ed8;
       text-align: center;
     }
@@ -193,6 +252,9 @@
       text-align: center;
     }
 
+    .blue { border-left-color: #1d4ed8; }
+    .blue h3 { color: #1d4ed8; }
+
     .green { border-left-color: #16a34a; }
     .green h3 { color: #16a34a; }
 
@@ -201,6 +263,12 @@
 
     .purple { border-left-color: #7c3aed; }
     .purple h3 { color: #7c3aed; }
+
+    .red { border-left-color: #dc2626; }
+    .red h3 { color: #dc2626; }
+
+    .gray { border-left-color: #4b5563; }
+    .gray h3 { color: #4b5563; }
 
     .table-wrap {
       overflow-x: auto;
@@ -216,7 +284,7 @@
     }
 
     .party-table { min-width: 1750px; }
-    .summary-table { min-width: 520px; }
+    .summary-table { min-width: 720px; }
 
     th {
       background: #1e40af;
@@ -229,9 +297,7 @@
       z-index: 2;
     }
 
-    .today-panel th {
-      background: #15803d;
-    }
+    .today-panel th { background: #15803d; }
 
     td {
       padding: 12px;
@@ -339,6 +405,30 @@
       margin-bottom: 15px;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
+    }
+
+    .sales-team-select {
+      min-width: 240px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #1f2937;
+      font-weight: bold;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sales-team-select:focus {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(29,78,216,0.15);
+    }
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #374151;
     }
 
     .filter-btn {
@@ -354,21 +444,6 @@
     .filter-btn.active {
       background: #1d4ed8;
       color: white;
-    }
-
-    .download-btn {
-      border: none;
-      padding: 11px 22px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      background: #0f172a;
-      color: white;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    }
-
-    .download-btn:hover {
-      background: #1d4ed8;
     }
 
     .filter-btn.open.active { background: #ea580c; }
@@ -466,9 +541,20 @@
       cursor: pointer;
     }
 
+    @media(max-width: 1200px) {
+      .cards { grid-template-columns: repeat(3, 1fr); }
+    }
+
     @media(max-width: 1050px) {
       .kpi-grid,
       .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width: 800px) {
+      .cards,
+      .database-cards {
         grid-template-columns: 1fr;
       }
     }
@@ -486,25 +572,13 @@
         flex-direction: column;
       }
 
-      .logo {
-        height: 48px;
-      }
+      .logo { height: 48px; }
 
-      .cards {
-        grid-template-columns: 1fr;
-      }
+      .header h1 { font-size: 24px; }
 
-      .header h1 {
-        font-size: 24px;
-      }
+      .container { padding: 16px; }
 
-      .container {
-        padding: 16px;
-      }
-
-      #map {
-        height: 430px;
-      }
+      #map { height: 430px; }
     }
   </style>
 </head>
@@ -534,6 +608,55 @@
 
   <div id="loading" class="loading">Loading data...</div>
 
+  <div class="database-panel">
+    <h2>Selected State Database</h2>
+
+    <div class="database-cards">
+      <div class="card blue">
+        <h3 id="totalDatabase">0</h3>
+        <p>Total Database</p>
+      </div>
+
+      <div class="card green">
+        <h3 id="databaseVisited">0</h3>
+        <p>Submitted / Visited</p>
+      </div>
+
+      <div class="card orange">
+        <h3 id="databasePending">0</h3>
+        <p>Pending / Not Submitted</p>
+      </div>
+    </div>
+
+    <div class="detail-toggle-wrap">
+      <button class="detail-toggle-btn" id="databaseDetailToggleBtn" onclick="toggleDatabaseDetail()">
+        Show More Detail
+      </button>
+    </div>
+
+    <div class="database-detail-box" id="databaseDetailBox">
+      <h3>District-wise Database Breakdown</h3>
+
+      <div class="table-wrap">
+        <table class="database-detail-table">
+          <thead>
+            <tr>
+              <th>District</th>
+              <th>Total Database</th>
+              <th>Submitted / Visited</th>
+              <th>Pending / Not Submitted</th>
+              <th>Open</th>
+              <th>Onboarded</th>
+              <th>Closed</th>
+              <th>Doesn’t Exist</th>
+            </tr>
+          </thead>
+          <tbody id="databaseDistrictTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <div class="kpi-grid">
 
     <div class="panel">
@@ -553,6 +676,16 @@
         <div class="card purple">
           <h3 id="overallReady">0</h3>
           <p>Onboarded</p>
+        </div>
+
+        <div class="card red">
+          <h3 id="overallClosed">0</h3>
+          <p>Closed</p>
+        </div>
+
+        <div class="card gray">
+          <h3 id="overallDoesnt">0</h3>
+          <p>Doesn’t Exist</p>
         </div>
       </div>
     </div>
@@ -575,6 +708,16 @@
           <h3 id="todayReady">0</h3>
           <p>Onboarded</p>
         </div>
+
+        <div class="card red">
+          <h3 id="todayClosed">0</h3>
+          <p>Closed</p>
+        </div>
+
+        <div class="card gray">
+          <h3 id="todayDoesnt">0</h3>
+          <p>Doesn’t Exist</p>
+        </div>
       </div>
     </div>
 
@@ -593,6 +736,8 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Closed</th>
+              <th>Doesn’t Exist</th>
             </tr>
           </thead>
           <tbody id="overallSalesTeamTable"></tbody>
@@ -611,6 +756,8 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Closed</th>
+              <th>Doesn’t Exist</th>
             </tr>
           </thead>
           <tbody id="todaySalesTeamTable"></tbody>
@@ -633,6 +780,8 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Closed</th>
+              <th>Doesn’t Exist</th>
             </tr>
           </thead>
           <tbody id="overallDistrictTable"></tbody>
@@ -651,6 +800,8 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Closed</th>
+              <th>Doesn’t Exist</th>
             </tr>
           </thead>
           <tbody id="todayDistrictTable"></tbody>
@@ -686,6 +837,11 @@
     <h2>Party List With Photos</h2>
 
     <div class="filter-row">
+      <span class="filter-label">Sales Team:</span>
+      <select id="partySalesTeamFilter" class="sales-team-select" onchange="setSalesTeamFilter()">
+        <option value="all">All Sales Teams</option>
+      </select>
+
       <button class="filter-btn active" id="partyAll" onclick="setPartyFilter('all')">All</button>
       <button class="filter-btn ready" id="partyReady" onclick="setPartyFilter('ready')">Onboarded</button>
       <button class="filter-btn open" id="partyOpen" onclick="setPartyFilter('open')">Open</button>
@@ -727,6 +883,7 @@
   <span class="close">&times;</span>
   <img id="modalImage">
 </div>
+
 <script>
   const SHEET_ID = "1jJta6wOibBHmrqmWQeq-BgYixVUoC1U1ZvX9SxyO8Oo";
 
@@ -735,12 +892,10 @@
       name: "Uttar Pradesh",
       gid: "0"
     },
-
     MP: {
       name: "Madhya Pradesh",
       gid: "1101100608"
     },
-
     MAH: {
       name: "Maharashtra",
       gid: "1763207454"
@@ -748,12 +903,13 @@
   };
 
   let currentSheet = "UP";
-
   let rawData = [];
+  let databaseData = [];
   let submittedData = [];
   let partyFilter = "all";
   let mapFilter = "all";
-
+  let selectedSalesTeam = "all";
+  let databaseDetailVisible = false;
   let map;
   let mapMarkers = [];
   let currentScript = null;
@@ -769,20 +925,14 @@
     document.getElementById("btnMP").classList.remove("active");
     document.getElementById("btnMAH").classList.remove("active");
 
-    if (sheetKey === "UP") {
-      document.getElementById("btnUP").classList.add("active");
-    }
-
-    if (sheetKey === "MP") {
-      document.getElementById("btnMP").classList.add("active");
-    }
-
-    if (sheetKey === "MAH") {
-      document.getElementById("btnMAH").classList.add("active");
-    }
+    if (sheetKey === "UP") document.getElementById("btnUP").classList.add("active");
+    if (sheetKey === "MP") document.getElementById("btnMP").classList.add("active");
+    if (sheetKey === "MAH") document.getElementById("btnMAH").classList.add("active");
 
     partyFilter = "all";
     mapFilter = "all";
+    selectedSalesTeam = "all";
+    databaseDetailVisible = false;
 
     resetFilterButtons();
     loadSheet(sheetKey);
@@ -790,6 +940,7 @@
 
   function loadSheet(sheetKey) {
     rawData = [];
+    databaseData = [];
     submittedData = [];
 
     clearDashboard();
@@ -798,9 +949,7 @@
     document.getElementById("loading").style.display = "block";
     document.getElementById("loading").innerHTML = "Loading " + SHEETS[sheetKey].name + " data...";
 
-    if (currentScript) {
-      currentScript.remove();
-    }
+    if (currentScript) currentScript.remove();
 
     const url =
       "https://docs.google.com/spreadsheets/d/" +
@@ -818,11 +967,11 @@
 
   function handleSheetData(response) {
     try {
-      const rows = response.table.rows;
+      const rows = response.table.rows || [];
       const headerMap = buildHeaderMap(response.table.cols || []);
 
       rawData = rows.map(r => {
-        const c = r.c;
+        const c = r.c || [];
 
         return {
           rtr: getByHeader(c, headerMap, ["RTR Code", "RTR_Code", "RTR"], [0]),
@@ -873,7 +1022,9 @@
         };
       });
 
-      submittedData = rawData.filter(row => {
+      databaseData = rawData.filter(isDatabaseRow);
+
+      submittedData = databaseData.filter(row => {
         return (
           String(row.submissionTime || "").trim() !== "" &&
           String(row.sde || "").trim() !== ""
@@ -886,8 +1037,19 @@
     } catch (error) {
       document.getElementById("loading").style.display = "block";
       document.getElementById("loading").innerHTML =
-        "Data loading failed. Check sheet sharing permission and column order.";
+        "Data loading failed. Check sheet sharing permission, sheet gid, and column order.";
+      console.error(error);
     }
+  }
+
+  function isDatabaseRow(row) {
+    return (
+      String(row.rtr || "").trim() !== "" ||
+      String(row.party || "").trim() !== "" ||
+      String(row.district || "").trim() !== "" ||
+      String(row.town || "").trim() !== "" ||
+      String(row.state || "").trim() !== ""
+    );
   }
 
   function getValue(cells, index) {
@@ -938,24 +1100,49 @@
   }
 
   function clearDashboard() {
+    document.getElementById("totalDatabase").innerText = "0";
+    document.getElementById("databaseVisited").innerText = "0";
+    document.getElementById("databasePending").innerText = "0";
+
     document.getElementById("overallVisited").innerText = "0";
     document.getElementById("overallOpen").innerText = "0";
     document.getElementById("overallReady").innerText = "0";
+    document.getElementById("overallClosed").innerText = "0";
+    document.getElementById("overallDoesnt").innerText = "0";
 
     document.getElementById("todayVisited").innerText = "0";
     document.getElementById("todayOpen").innerText = "0";
     document.getElementById("todayReady").innerText = "0";
+    document.getElementById("todayClosed").innerText = "0";
+    document.getElementById("todayDoesnt").innerText = "0";
 
     document.getElementById("overallSalesTeamTable").innerHTML = "";
     document.getElementById("todaySalesTeamTable").innerHTML = "";
     document.getElementById("overallDistrictTable").innerHTML = "";
     document.getElementById("todayDistrictTable").innerHTML = "";
     document.getElementById("partyTable").innerHTML = "";
+
+    const databaseDistrictTable = document.getElementById("databaseDistrictTable");
+    if (databaseDistrictTable) databaseDistrictTable.innerHTML = "";
+
+    const detailBox = document.getElementById("databaseDetailBox");
+    if (detailBox) detailBox.style.display = "none";
+
+    const detailBtn = document.getElementById("databaseDetailToggleBtn");
+    if (detailBtn) detailBtn.innerText = "Show More Detail";
+
+    const salesTeamDropdown = document.getElementById("partySalesTeamFilter");
+    if (salesTeamDropdown) {
+      salesTeamDropdown.innerHTML = '<option value="all">All Sales Teams</option>';
+      salesTeamDropdown.value = "all";
+    }
   }
 
   function renderDashboard() {
     const todayData = getTodayData();
 
+    renderDatabaseCards();
+    renderDatabaseDistrictBreakdown();
     renderKPICards(submittedData, "overall");
     renderKPICards(todayData, "today");
 
@@ -966,7 +1153,137 @@
     renderGroupSummary(todayData, "district", "todayDistrictTable");
 
     renderMap();
+    renderSalesTeamDropdown();
     renderPartyTable();
+  }
+
+  function renderDatabaseCards() {
+    const totalDatabase = databaseData.length;
+    const totalVisited = submittedData.length;
+    const pending = Math.max(totalDatabase - totalVisited, 0);
+
+    document.getElementById("totalDatabase").innerText = totalDatabase;
+    document.getElementById("databaseVisited").innerText = totalVisited;
+    document.getElementById("databasePending").innerText = pending;
+  }
+
+  function toggleDatabaseDetail() {
+    databaseDetailVisible = !databaseDetailVisible;
+
+    const detailBox = document.getElementById("databaseDetailBox");
+    const detailBtn = document.getElementById("databaseDetailToggleBtn");
+
+    if (!detailBox || !detailBtn) return;
+
+    if (databaseDetailVisible) {
+      detailBox.style.display = "block";
+      detailBtn.innerText = "Hide Detail";
+      renderDatabaseDistrictBreakdown();
+    } else {
+      detailBox.style.display = "none";
+      detailBtn.innerText = "Show More Detail";
+    }
+  }
+
+  function renderDatabaseDistrictBreakdown() {
+    const tableBody = document.getElementById("databaseDistrictTable");
+    if (!tableBody) return;
+
+    const summary = {};
+
+    databaseData.forEach(row => {
+      const district = String(row.district || "").trim() || "District Not Available";
+
+      if (!summary[district]) {
+        summary[district] = {
+          totalDatabase: 0,
+          submitted: 0,
+          pending: 0,
+          open: 0,
+          ready: 0,
+          closed: 0,
+          doesnt: 0
+        };
+      }
+
+      summary[district].totalDatabase++;
+    });
+
+    submittedData.forEach(row => {
+      const district = String(row.district || "").trim() || "District Not Available";
+
+      if (!summary[district]) {
+        summary[district] = {
+          totalDatabase: 0,
+          submitted: 0,
+          pending: 0,
+          open: 0,
+          ready: 0,
+          closed: 0,
+          doesnt: 0
+        };
+      }
+
+      summary[district].submitted++;
+
+      if (isOpen(row)) summary[district].open++;
+      if (isReady(row)) summary[district].ready++;
+      if (isClosed(row)) summary[district].closed++;
+      if (isDoesntExist(row)) summary[district].doesnt++;
+    });
+
+    Object.keys(summary).forEach(district => {
+      summary[district].pending = Math.max(
+        summary[district].totalDatabase - summary[district].submitted,
+        0
+      );
+    });
+
+    let html = "";
+
+    Object.keys(summary)
+      .sort((a, b) => summary[b].totalDatabase - summary[a].totalDatabase)
+      .forEach(district => {
+        html += `
+          <tr>
+            <td><b>${safe(district)}</b></td>
+            <td>${summary[district].totalDatabase}</td>
+            <td>${summary[district].submitted}</td>
+            <td>${summary[district].pending}</td>
+            <td>${summary[district].open}</td>
+            <td>${summary[district].ready}</td>
+            <td>${summary[district].closed}</td>
+            <td>${summary[district].doesnt}</td>
+          </tr>
+        `;
+      });
+
+    if (databaseData.length > 0) {
+      html += `
+        <tr class="summary-row">
+          <td>Total</td>
+          <td>${databaseData.length}</td>
+          <td>${submittedData.length}</td>
+          <td>${Math.max(databaseData.length - submittedData.length, 0)}</td>
+          <td>${submittedData.filter(isOpen).length}</td>
+          <td>${submittedData.filter(isReady).length}</td>
+          <td>${submittedData.filter(isClosed).length}</td>
+          <td>${submittedData.filter(isDoesntExist).length}</td>
+        </tr>
+      `;
+    }
+
+    if (databaseData.length === 0) {
+      html = `
+        <tr>
+          <td colspan="8" style="text-align:center; color:#64748b; font-weight:bold;">
+            No database data available
+          </td>
+        </tr>
+      `;
+    }
+
+    tableBody.innerHTML = html;
   }
 
   function statusText(row) {
@@ -999,7 +1316,7 @@
     return (
       !isDoesntExist(row) &&
       (
-        String(row.ready || "").toLowerCase() === "yes" ||
+        String(row.ready || "").toLowerCase().trim() === "yes" ||
         statusText(row).includes("onboard")
       )
     );
@@ -1020,6 +1337,8 @@
     document.getElementById(type + "Visited").innerText = data.length;
     document.getElementById(type + "Open").innerText = data.filter(isOpen).length;
     document.getElementById(type + "Ready").innerText = data.filter(isReady).length;
+    document.getElementById(type + "Closed").innerText = data.filter(isClosed).length;
+    document.getElementById(type + "Doesnt").innerText = data.filter(isDoesntExist).length;
   }
 
   function getTodayData() {
@@ -1041,9 +1360,17 @@
     if (!value) return null;
 
     const text = String(value).trim();
-    const match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,\s*(.*))?/);
 
-    if (!match) return null;
+    let match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,\s*(.*))?/);
+
+    if (!match) {
+      match = text.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s*(.*))?/);
+    }
+
+    if (!match) {
+      const directDate = new Date(text);
+      return isNaN(directDate.getTime()) ? null : directDate;
+    }
 
     let first = Number(match[1]);
     let second = Number(match[2]);
@@ -1097,7 +1424,9 @@
         summary[groupName] = {
           total: 0,
           open: 0,
-          ready: 0
+          ready: 0,
+          closed: 0,
+          doesnt: 0
         };
       }
 
@@ -1105,6 +1434,8 @@
 
       if (isOpen(row)) summary[groupName].open++;
       if (isReady(row)) summary[groupName].ready++;
+      if (isClosed(row)) summary[groupName].closed++;
+      if (isDoesntExist(row)) summary[groupName].doesnt++;
     });
 
     let html = "";
@@ -1118,6 +1449,8 @@
             <td>${summary[name].total}</td>
             <td>${summary[name].open}</td>
             <td>${summary[name].ready}</td>
+            <td>${summary[name].closed}</td>
+            <td>${summary[name].doesnt}</td>
           </tr>
         `;
       });
@@ -1131,6 +1464,8 @@
           <td>${validRows.length}</td>
           <td>${validRows.filter(isOpen).length}</td>
           <td>${validRows.filter(isReady).length}</td>
+          <td>${validRows.filter(isClosed).length}</td>
+          <td>${validRows.filter(isDoesntExist).length}</td>
         </tr>
       `;
     }
@@ -1138,7 +1473,7 @@
     if (validRows.length === 0) {
       html = `
         <tr>
-          <td colspan="4" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="6" style="text-align:center; color:#64748b; font-weight:bold;">
             No data available
           </td>
         </tr>
@@ -1302,14 +1637,57 @@
 
     document.getElementById("mapAll").classList.add("active");
     document.getElementById("partyAll").classList.add("active");
+
+    const salesTeamDropdown = document.getElementById("partySalesTeamFilter");
+    if (salesTeamDropdown) {
+      salesTeamDropdown.value = "all";
+    }
+  }
+
+  function renderSalesTeamDropdown() {
+    const dropdown = document.getElementById("partySalesTeamFilter");
+    if (!dropdown) return;
+
+    const salesTeams = [...new Set(
+      submittedData
+        .map(row => String(row.sde || "").trim())
+        .filter(name => name !== "")
+    )].sort((a, b) => a.localeCompare(b));
+
+    let html = '<option value="all">All Sales Teams</option>';
+
+    salesTeams.forEach(name => {
+      const selected = name === selectedSalesTeam ? "selected" : "";
+      html += `<option value="${safe(name)}" ${selected}>${safe(name)}</option>`;
+    });
+
+    dropdown.innerHTML = html;
+
+    const stillExists = salesTeams.includes(selectedSalesTeam);
+    if (!stillExists) {
+      selectedSalesTeam = "all";
+      dropdown.value = "all";
+    }
+  }
+
+  function setSalesTeamFilter() {
+    const dropdown = document.getElementById("partySalesTeamFilter");
+    selectedSalesTeam = dropdown ? dropdown.value : "all";
+    renderPartyTable();
   }
 
   function getPartyListData() {
-    if (partyFilter === "ready") return submittedData.filter(isReady);
-    if (partyFilter === "open") return submittedData.filter(isOpen);
-    if (partyFilter === "closed") return submittedData.filter(isClosed);
-    if (partyFilter === "doesnt") return submittedData.filter(isDoesntExist);
-    return submittedData;
+    let rows = submittedData;
+
+    if (selectedSalesTeam !== "all") {
+      rows = rows.filter(row => String(row.sde || "").trim() === selectedSalesTeam);
+    }
+
+    if (partyFilter === "ready") return rows.filter(isReady);
+    if (partyFilter === "open") return rows.filter(isOpen);
+    if (partyFilter === "closed") return rows.filter(isClosed);
+    if (partyFilter === "doesnt") return rows.filter(isDoesntExist);
+    return rows;
   }
 
   function getActivationDateBox(value) {
@@ -1328,7 +1706,6 @@
 
     partyRows.forEach(row => {
       const salesTeam = String(row.sde || "").trim();
-
       const statusBadge = getStatusBadge(row);
 
       const readyBadge = isReady(row)
@@ -1336,11 +1713,10 @@
         : `<span class="badge badge-no">No</span>`;
 
       const activationDateHtml = getActivationDateBox(row.estimatedActivationDate);
-
       const imageUrl = getDriveImage(row.photo);
 
       const photoHtml = imageUrl
-        ? `<img src="${imageUrl}" class="photo" onclick="openImage('${imageUrl}')">`
+        ? `<img src="${safe(imageUrl)}" class="photo" onclick="openImage('${safeForJs(imageUrl)}')">`
         : `<span class="no-photo">No Photo</span>`;
 
       html += `
@@ -1370,7 +1746,7 @@
       html = `
         <tr>
           <td colspan="17" style="text-align:center; color:#64748b; font-weight:bold;">
-            No party found for selected filter
+            No party found for selected Sales Team / Status filter
           </td>
         </tr>
       `;
@@ -1411,6 +1787,7 @@
     }
 
     const stateName = SHEETS[currentSheet].name;
+
     const filterName = partyFilter === "all" ? "All" :
                        partyFilter === "ready" ? "Onboarded" :
                        partyFilter === "open" ? "Open" :
@@ -1567,11 +1944,22 @@
       .replace(/'/g, "&#039;");
   }
 
+  function safeForJs(value) {
+    return String(value || "")
+      .replace(/\\/g, "\\\\")
+      .replace(/'/g, "\\'")
+      .replace(/"/g, "&quot;");
+  }
+
   setTimeout(() => {
-    if (submittedData.length === 0) {
+    if (databaseData.length === 0) {
       document.getElementById("loading").style.display = "block";
       document.getElementById("loading").innerHTML =
-        "No submitted work found. Check Submission_Time, Sales Team and sheet sharing permission.";
+        "No database rows found. Check sheet sharing permission, selected state tab, and sheet gid.";
+    } else if (submittedData.length === 0) {
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("loading").innerHTML =
+        "Database loaded, but no submitted work found. Check Submission Time and Sales Team columns.";
     }
   }, 8000);
 </script>
