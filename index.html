@@ -1114,10 +1114,11 @@
       databaseData = rawData.filter(isDatabaseRow);
 
       submittedData = databaseData.filter(row => {
-        return (
-          String(row.submissionTime || "").trim() !== "" &&
-          String(row.sde || "").trim() !== ""
-        );
+        const verifiedText = String(row.verified || "").toLowerCase().trim();
+        const hasVerifiedYes = verifiedText === "yes" || verifiedText === "y" || verifiedText === "true";
+        const hasValidSubmissionTime = parseFlexibleDate(row.submissionTime) !== null;
+
+        return hasVerifiedYes || hasValidSubmissionTime;
       });
 
       document.getElementById("loading").style.display = "none";
@@ -1446,60 +1447,103 @@
   }
 
   function parseFlexibleDate(value) {
-    if (!value) return null;
+    if (value === null || value === undefined || value === "") return null;
 
-    const text = String(value).trim();
+    // Google Visualization sometimes sends Date values as Date(2026,4,21,18,21,30).
+    // Month is zero-based in this format.
+    if (value instanceof Date && !isNaN(value.getTime())) return value;
 
-    let match = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,\s*(.*))?/);
+    let text = String(value)
+      .trim()
+      .replace(/\u00a0/g, " ")
+      .replace(/[\u200e\u200f]/g, "")
+      .replace(/\s+/g, " ");
 
-    if (!match) {
-      match = text.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s*(.*))?/);
+    if (!text) return null;
+
+    const googleDate = text.match(/^Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})(?:,\s*(\d{1,2}),\s*(\d{1,2}),\s*(\d{1,2}))?\)$/);
+    if (googleDate) {
+      const year = Number(googleDate[1]);
+      const monthIndex = Number(googleDate[2]);
+      const day = Number(googleDate[3]);
+      const hour = Number(googleDate[4] || 0);
+      const minute = Number(googleDate[5] || 0);
+      const second = Number(googleDate[6] || 0);
+      const d = new Date(year, monthIndex, day, hour, minute, second);
+      return isValidParsedDate(d, year, monthIndex + 1, day) ? d : null;
     }
 
-    if (!match) {
-      const directDate = new Date(text);
-      return isNaN(directDate.getTime()) ? null : directDate;
-    }
-
-    let first = Number(match[1]);
-    let second = Number(match[2]);
-    let year = Number(match[3]);
-    let timePart = match[4] || "00:00:00";
-
-    let day;
-    let month;
-
-    if (first > 12) {
-      day = first;
-      month = second;
-    } else if (second > 12) {
-      month = first;
-      day = second;
-    } else {
-      day = first;
-      month = second;
-    }
-
-    let hour = 0;
-    let minute = 0;
-    let secondValue = 0;
-
-    const timeMatch = timePart.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
-
-    if (timeMatch) {
-      hour = Number(timeMatch[1]);
-      minute = Number(timeMatch[2]);
-      secondValue = Number(timeMatch[3] || 0);
-
-      const meridian = timeMatch[4];
-
-      if (meridian) {
-        if (meridian.toUpperCase() === "PM" && hour < 12) hour += 12;
-        if (meridian.toUpperCase() === "AM" && hour === 12) hour = 0;
+    // Excel serial date support, in case the sheet sends raw serial numbers.
+    if (/^\d+(?:\.\d+)?$/.test(text)) {
+      const serial = Number(text);
+      if (serial > 25000 && serial < 80000) {
+        const utcDays = Math.floor(serial - 25569);
+        const utcValue = utcDays * 86400 * 1000;
+        const dateInfo = new Date(utcValue);
+        const fractionalDay = serial - Math.floor(serial);
+        const totalSeconds = Math.round(fractionalDay * 86400);
+        dateInfo.setHours(Math.floor(totalSeconds / 3600));
+        dateInfo.setMinutes(Math.floor((totalSeconds % 3600) / 60));
+        dateInfo.setSeconds(totalSeconds % 60);
+        return isNaN(dateInfo.getTime()) ? null : dateInfo;
       }
     }
 
-    return new Date(year, month - 1, day, hour, minute, secondValue);
+    // Handles:
+    // 5/21/2026, 6:21:30 PM   -> MM/DD/YYYY because second number > 12
+    // 15/05/2026, 14:39:54    -> DD/MM/YYYY because first number > 12
+    // 21/5/2026, 5:38:37 pm   -> DD/MM/YYYY because first number > 12
+    // 22/5/2026, 1:21:40 PM   -> DD/MM/YYYY
+    const dateTimeMatch = text.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:\s*,?\s*(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?\s*([AP]M)?)?$/i);
+
+    if (dateTimeMatch) {
+      let first = Number(dateTimeMatch[1]);
+      let second = Number(dateTimeMatch[2]);
+      let year = Number(dateTimeMatch[3]);
+
+      if (year < 100) year += 2000;
+
+      let day;
+      let month;
+
+      if (first > 12 && second <= 12) {
+        // Indian / UK format: DD/MM/YYYY
+        day = first;
+        month = second;
+      } else if (second > 12 && first <= 12) {
+        // US format: MM/DD/YYYY
+        month = first;
+        day = second;
+      } else {
+        // Ambiguous dates such as 5/6/2026: default to Indian format for this dashboard.
+        day = first;
+        month = second;
+      }
+
+      let hour = Number(dateTimeMatch[4] || 0);
+      const minute = Number(dateTimeMatch[5] || 0);
+      const secondValue = Number(dateTimeMatch[6] || 0);
+      const meridian = dateTimeMatch[7] ? dateTimeMatch[7].toUpperCase() : "";
+
+      if (meridian === "PM" && hour < 12) hour += 12;
+      if (meridian === "AM" && hour === 12) hour = 0;
+
+      const parsed = new Date(year, month - 1, day, hour, minute, secondValue);
+      return isValidParsedDate(parsed, year, month, day) ? parsed : null;
+    }
+
+    const directDate = new Date(text);
+    return isNaN(directDate.getTime()) ? null : directDate;
+  }
+
+  function isValidParsedDate(date, year, month, day) {
+    return (
+      date instanceof Date &&
+      !isNaN(date.getTime()) &&
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    );
   }
 
   function renderGroupSummary(data, groupKey, tableId) {
