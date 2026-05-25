@@ -189,7 +189,7 @@
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 12px;
       width: 100%;
     }
@@ -199,6 +199,263 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       width: 100%;
+    }
+
+    .database-unit-block {
+      background: #f8fafc;
+      border: 1px solid #dbeafe;
+      border-radius: 18px;
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .database-unit-title {
+      text-align: center;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 12px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .database-unit-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .database-unit-metrics .card {
+      padding: 14px 8px;
+      background: white;
+    }
+
+    .database-unit-metrics .card h3 {
+      font-size: clamp(22px, 2vw, 30px);
+    }
+
+    .hierarchy-table {
+      min-width: 1120px;
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    .hierarchy-table th,
+    .hierarchy-table td {
+      padding: 10px 8px;
+      font-size: 12px;
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      line-height: 1.25;
+    }
+
+    .level-district td {
+      background: #eff6ff;
+      font-weight: 900;
+      border-top: 2px solid #bfdbfe;
+    }
+
+    .level-tehsil td {
+      background: #f8fafc;
+      font-weight: 800;
+    }
+
+    .level-town td {
+      background: #ffffff;
+    }
+
+    .hierarchy-name {
+      text-align: left;
+    }
+
+    .indent-0 { padding-left: 10px !important; }
+    .indent-1 { padding-left: 34px !important; }
+    .indent-2 { padding-left: 62px !important; }
+
+    .unit-pill {
+      display: inline-block;
+      min-width: 70px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 11px;
+      text-align: center;
+      margin-right: 8px;
+      color: white;
+    }
+
+    .unit-district { background: #1d4ed8; }
+    .unit-tehsil { background: #7c3aed; }
+    .unit-town { background: #4b5563; }
+
+
+
+    .town-showcase {
+      grid-column: 1 / -1;
+      width: 100%;
+      margin: 0;
+      background: #f8fafc;
+      border: 1px solid #dbeafe;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: none;
+    }
+
+    .town-showcase .database-unit-title {
+      color: #0f172a;
+      margin-bottom: 12px;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      text-align: left;
+      padding-left: 4px;
+    }
+
+    .town-master-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .town-master-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: left;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+    }
+
+    .town-master-card h3 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1;
+      color: #1d4ed8;
+      font-weight: 900;
+    }
+
+    .town-master-card p {
+      margin: 8px 0 0;
+      font-size: 12px;
+      font-weight: 900;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .town-type-breakdown {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .town-type-box {
+      background: white;
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      padding: 14px 12px;
+      text-align: left;
+      min-width: 0;
+      box-shadow: 0 2px 10px rgba(15,23,42,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .town-type-box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 5px;
+      background: #1d4ed8;
+    }
+
+    .town-type-box.dhq::before { background: #7c3aed; }
+    .town-type-box.p1::before { background: #ea580c; }
+    .town-type-box.p2::before { background: #16a34a; }
+
+    .town-type-box h4 {
+      margin: 4px 0 12px;
+      font-size: 15px;
+      color: #0f172a;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      text-align: left;
+    }
+
+    .town-type-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .town-type-metric {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 10px 8px;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .town-type-metric b {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+      color: #1d4ed8;
+      font-weight: 900;
+    }
+
+    .town-type-metric span {
+      display: block;
+      margin-top: 5px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #64748b;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+
+    .town-operation-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .town-operation-metric {
+      background: linear-gradient(180deg, #ffffff, #f8fafc);
+      border-radius: 12px;
+      padding: 10px 8px;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .town-operation-metric b {
+      display: block;
+      font-size: 20px;
+      line-height: 1.1;
+      color: #0f172a;
+      font-weight: 900;
+    }
+
+    .town-operation-metric span {
+      display: block;
+      margin-top: 5px;
+      font-size: 9.5px;
+      color: #64748b;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .town-operation-metric.conversion b {
+      color: #16a34a;
     }
 
     .detail-toggle-wrap {
@@ -641,9 +898,18 @@
       }
     }
 
+    @media(max-width: 1050px) {
+      .town-operation-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media(max-width: 800px) {
       .cards,
-      .database-cards {
+      .database-cards,
+      .town-master-metrics,
+      .town-type-breakdown,
+      .town-operation-metrics {
         grid-template-columns: 1fr;
       }
     }
@@ -701,19 +967,88 @@
     <h2>Selected State Database</h2>
 
     <div class="database-cards">
-      <div class="card blue">
-        <h3 id="totalDatabase">0</h3>
-        <p>Total Database</p>
+      <div class="database-unit-block">
+        <div class="database-unit-title">Party Database</div>
+        <div class="database-unit-metrics">
+          <div class="card blue"><h3 id="totalDatabase">0</h3><p>Total</p></div>
+          <div class="card green"><h3 id="databaseVisited">0</h3><p>Submitted</p></div>
+          <div class="card orange"><h3 id="databasePending">0</h3><p>Pending</p></div>
+        </div>
       </div>
 
-      <div class="card green">
-        <h3 id="databaseVisited">0</h3>
-        <p>Submitted / Visited</p>
+      <div class="database-unit-block">
+        <div class="database-unit-title">Unique Districts</div>
+        <div class="database-unit-metrics">
+          <div class="card purple"><h3 id="uniqueDistricts">0</h3><p>Total</p></div>
+          <div class="card orange"><h3 id="districtsStarted">0</h3><p>Started</p></div>
+          <div class="card green"><h3 id="districtsCompleted">0</h3><p>Completed</p></div>
+        </div>
       </div>
 
-      <div class="card orange">
-        <h3 id="databasePending">0</h3>
-        <p>Pending / Not Submitted</p>
+      <div class="database-unit-block">
+        <div class="database-unit-title">Unique Tehsils</div>
+        <div class="database-unit-metrics">
+          <div class="card red"><h3 id="uniqueTehsils">0</h3><p>Total</p></div>
+          <div class="card orange"><h3 id="tehsilsStarted">0</h3><p>Started</p></div>
+          <div class="card green"><h3 id="tehsilsCompleted">0</h3><p>Completed</p></div>
+        </div>
+      </div>
+
+      <div class="database-unit-block town-showcase">
+        <div class="database-unit-title">Unique Towns</div>
+
+        <div class="town-master-metrics">
+          <div class="town-master-card"><h3 id="uniqueTowns">0</h3><p>Total</p></div>
+          <div class="town-master-card"><h3 id="townsStarted">0</h3><p>Started</p></div>
+          <div class="town-master-card"><h3 id="townsCompleted">0</h3><p>Completed</p></div>
+        </div>
+
+        <div class="town-type-breakdown">
+          <div class="town-type-box dhq">
+            <h4>DHQ Towns</h4>
+            <div class="town-type-metrics">
+              <div class="town-type-metric"><b id="townDHQTotal">0</b><span>Total</span></div>
+              <div class="town-type-metric"><b id="townDHQStarted">0</b><span>Started</span></div>
+              <div class="town-type-metric"><b id="townDHQCompleted">0</b><span>Completed</span></div>
+            </div>
+            <div class="town-operation-metrics">
+              <div class="town-operation-metric"><b id="townDHQVisited">0</b><span>Total Party Visited</span></div>
+              <div class="town-operation-metric"><b id="townDHQOpen">0</b><span>Open</span></div>
+              <div class="town-operation-metric"><b id="townDHQOnboarded">0</b><span>Onboarded</span></div>
+              <div class="town-operation-metric conversion"><b id="townDHQConversion">0%</b><span>Conversion %</span></div>
+            </div>
+          </div>
+
+          <div class="town-type-box p1">
+            <h4>P1 Towns</h4>
+            <div class="town-type-metrics">
+              <div class="town-type-metric"><b id="townP1Total">0</b><span>Total</span></div>
+              <div class="town-type-metric"><b id="townP1Started">0</b><span>Started</span></div>
+              <div class="town-type-metric"><b id="townP1Completed">0</b><span>Completed</span></div>
+            </div>
+            <div class="town-operation-metrics">
+              <div class="town-operation-metric"><b id="townP1Visited">0</b><span>Total Party Visited</span></div>
+              <div class="town-operation-metric"><b id="townP1Open">0</b><span>Open</span></div>
+              <div class="town-operation-metric"><b id="townP1Onboarded">0</b><span>Onboarded</span></div>
+              <div class="town-operation-metric conversion"><b id="townP1Conversion">0%</b><span>Conversion %</span></div>
+            </div>
+          </div>
+
+          <div class="town-type-box p2">
+            <h4>P2 Towns</h4>
+            <div class="town-type-metrics">
+              <div class="town-type-metric"><b id="townP2Total">0</b><span>Total</span></div>
+              <div class="town-type-metric"><b id="townP2Started">0</b><span>Started</span></div>
+              <div class="town-type-metric"><b id="townP2Completed">0</b><span>Completed</span></div>
+            </div>
+            <div class="town-operation-metrics">
+              <div class="town-operation-metric"><b id="townP2Visited">0</b><span>Total Party Visited</span></div>
+              <div class="town-operation-metric"><b id="townP2Open">0</b><span>Open</span></div>
+              <div class="town-operation-metric"><b id="townP2Onboarded">0</b><span>Onboarded</span></div>
+              <div class="town-operation-metric conversion"><b id="townP2Conversion">0%</b><span>Conversion %</span></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -724,25 +1059,48 @@
     </div>
 
     <div class="database-detail-box" id="databaseDetailBox">
-      <h3>District-wise Database Breakdown</h3>
+      <h3>District → Tehsil → Town Paired Breakdown</h3>
+      <div class="table-wrap">
+        <table class="hierarchy-table">
+          <thead>
+            <tr>
+              <th style="width:26%;">Hierarchy</th>
+              <th style="width:10%;">District</th>
+              <th style="width:10%;">Tehsil</th>
+              <th style="width:10%;">Town</th>
+              <th style="width:8%;">Village Type</th>
+              <th style="width:8%;">Total Parties</th>
+              <th style="width:8%;">Submitted</th>
+              <th style="width:8%;">Pending</th>
+              <th style="width:8%;">Live Status</th>
+              <th style="width:7%;">Open</th>
+              <th style="width:7%;">Onboarded</th>
+              <th style="width:8%;">Conversion %</th>
+            </tr>
+          </thead>
+          <tbody id="databaseHierarchyTable"></tbody>
+        </table>
+      </div>
 
+      <h3 style="margin-top:22px;">Unique Town Summary by Village Type</h3>
       <div class="table-wrap">
         <table class="database-detail-table">
           <thead>
             <tr>
-              <th>District</th>
-              <th>Total Database</th>
-              <th>Submitted / Visited</th>
-              <th>Pending / Not Submitted</th>
-              <th>Open</th>
-              <th>Onboarded</th>
-              <th>Closed</th>
-              <th>Doesn’t Exist</th>
+              <th>Village Type</th>
+              <th>Unique Towns</th>
+              <th>Started Towns</th>
+              <th>Completed Towns</th>
+              <th>Not Started Towns</th>
             </tr>
           </thead>
-          <tbody id="databaseDistrictTable"></tbody>
+          <tbody id="villageTypeTownSummaryTable"></tbody>
         </table>
       </div>
+
+      <p style="text-align:center; color:#64748b; font-weight:bold; margin-top:14px;">
+        Town-level rows are now shown under their correct District and Tehsil in the hierarchy table above.
+      </p>
     </div>
   </div>
 
@@ -765,6 +1123,11 @@
         <div class="card purple">
           <h3 id="overallReady">0</h3>
           <p>Onboarded</p>
+        </div>
+
+        <div class="card blue">
+          <h3 id="overallConversion">0%</h3>
+          <p>Conversion %</p>
         </div>
 
         <div class="card red">
@@ -798,6 +1161,11 @@
           <p>Onboarded</p>
         </div>
 
+        <div class="card blue">
+          <h3 id="todayConversion">0%</h3>
+          <p>Conversion %</p>
+        </div>
+
         <div class="card red">
           <h3 id="todayClosed">0</h3>
           <p>Closed</p>
@@ -825,6 +1193,7 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Conversion %</th>
               <th>Closed</th>
               <th>Doesn’t Exist</th>
             </tr>
@@ -845,6 +1214,7 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Conversion %</th>
               <th>Closed</th>
               <th>Doesn’t Exist</th>
             </tr>
@@ -869,6 +1239,7 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Conversion %</th>
               <th>Closed</th>
               <th>Doesn’t Exist</th>
             </tr>
@@ -889,6 +1260,7 @@
               <th>Total Party Visited</th>
               <th>Open</th>
               <th>Onboarded</th>
+              <th>Conversion %</th>
               <th>Closed</th>
               <th>Doesn’t Exist</th>
             </tr>
@@ -949,6 +1321,8 @@
             <th>District</th>
             <th>Tehsil</th>
             <th>Town</th>
+            <th>Village Type</th>
+            <th>Unique Key</th>
             <th>Estimated Outlet Universe</th>
             <th>Sales Team</th>
             <th>Status</th>
@@ -1071,6 +1445,8 @@
           district: getByHeader(c, headerMap, ["District"], [5]),
           tehsil: getByHeader(c, headerMap, ["Tehsil"], [6]),
           town: getByHeader(c, headerMap, ["Town"], [7]),
+          villageType: getByHeader(c, headerMap, ["Village Type", "Village_Type", "Type", "P Type", "Priority", "P1/P2"], []),
+          uniqueKey: getByHeader(c, headerMap, ["Unique", "Unique Key", "Unique_Key", "Town Unique", "Town_Unique", "Unique Town", "Unique_Town"], []),
           estimatedOutletUniverse: getByHeader(
             c,
             headerMap,
@@ -1113,13 +1489,7 @@
 
       databaseData = rawData.filter(isDatabaseRow);
 
-      submittedData = databaseData.filter(row => {
-        const verifiedText = String(row.verified || "").toLowerCase().trim();
-        const hasVerifiedYes = verifiedText === "yes" || verifiedText === "y" || verifiedText === "true";
-        const hasValidSubmissionTime = parseFlexibleDate(row.submissionTime) !== null;
-
-        return hasVerifiedYes || hasValidSubmissionTime;
-      });
+      submittedData = databaseData.filter(isSubmitted);
 
       document.getElementById("loading").style.display = "none";
       renderDashboard();
@@ -1193,18 +1563,29 @@
     document.getElementById("totalDatabase").innerText = "0";
     document.getElementById("databaseVisited").innerText = "0";
     document.getElementById("databasePending").innerText = "0";
+    document.getElementById("uniqueDistricts").innerText = "0";
+    document.getElementById("districtsStarted").innerText = "0";
+    document.getElementById("districtsCompleted").innerText = "0";
+    document.getElementById("uniqueTehsils").innerText = "0";
+    document.getElementById("tehsilsStarted").innerText = "0";
+    document.getElementById("tehsilsCompleted").innerText = "0";
+    document.getElementById("uniqueTowns").innerText = "0";
+    document.getElementById("townsStarted").innerText = "0";
+    document.getElementById("townsCompleted").innerText = "0";
 
     document.getElementById("overallVisited").innerText = "0";
     document.getElementById("overallOpen").innerText = "0";
     document.getElementById("overallReady").innerText = "0";
     document.getElementById("overallClosed").innerText = "0";
     document.getElementById("overallDoesnt").innerText = "0";
+    document.getElementById("overallConversion").innerText = "0%";
 
     document.getElementById("todayVisited").innerText = "0";
     document.getElementById("todayOpen").innerText = "0";
     document.getElementById("todayReady").innerText = "0";
     document.getElementById("todayClosed").innerText = "0";
     document.getElementById("todayDoesnt").innerText = "0";
+    document.getElementById("todayConversion").innerText = "0%";
 
     document.getElementById("overallSalesTeamTable").innerHTML = "";
     document.getElementById("todaySalesTeamTable").innerHTML = "";
@@ -1212,8 +1593,17 @@
     document.getElementById("todayDistrictTable").innerHTML = "";
     document.getElementById("partyTable").innerHTML = "";
 
-    const databaseDistrictTable = document.getElementById("databaseDistrictTable");
-    if (databaseDistrictTable) databaseDistrictTable.innerHTML = "";
+    const databaseHierarchyTable = document.getElementById("databaseHierarchyTable");
+    if (databaseHierarchyTable) databaseHierarchyTable.innerHTML = "";
+
+    const databaseTehsilTable = document.getElementById("databaseTehsilTable");
+    if (databaseTehsilTable) databaseTehsilTable.innerHTML = "";
+
+    const databaseTownTable = document.getElementById("databaseTownTable");
+    if (databaseTownTable) databaseTownTable.innerHTML = "";
+
+    const villageTypeTownSummaryTable = document.getElementById("villageTypeTownSummaryTable");
+    if (villageTypeTownSummaryTable) villageTypeTownSummaryTable.innerHTML = "";
 
     const detailBox = document.getElementById("databaseDetailBox");
     if (detailBox) detailBox.style.display = "none";
@@ -1255,6 +1645,28 @@
     document.getElementById("totalDatabase").innerText = totalDatabase;
     document.getElementById("databaseVisited").innerText = totalVisited;
     document.getElementById("databasePending").innerText = pending;
+
+    const districtUnitStatus = summarizeUniqueUnitStatus(row => String(row.district || "").trim() || "District Not Available");
+    const tehsilUnitStatus = summarizeUniqueUnitStatus(row => buildTehsilKey(row));
+    const townUnitStatus = summarizeUniqueUnitStatus(row => getTownUniqueKey(row));
+
+    document.getElementById("uniqueDistricts").innerText = districtUnitStatus.total;
+    document.getElementById("districtsStarted").innerText = districtUnitStatus.started;
+    document.getElementById("districtsCompleted").innerText = districtUnitStatus.completed;
+
+    document.getElementById("uniqueTehsils").innerText = tehsilUnitStatus.total;
+    document.getElementById("tehsilsStarted").innerText = tehsilUnitStatus.started;
+    document.getElementById("tehsilsCompleted").innerText = tehsilUnitStatus.completed;
+
+    document.getElementById("uniqueTowns").innerText = townUnitStatus.total;
+    document.getElementById("townsStarted").innerText = townUnitStatus.started;
+    document.getElementById("townsCompleted").innerText = townUnitStatus.completed;
+
+    renderVillageTypeTownCards();
+  }
+
+  function getUniqueCount(rows, keyGetter) {
+    return new Set(rows.map(keyGetter).map(v => String(v || '').trim()).filter(Boolean)).size;
   }
 
   function toggleDatabaseDetail() {
@@ -1276,97 +1688,97 @@
   }
 
   function renderDatabaseDistrictBreakdown() {
-    const tableBody = document.getElementById("databaseDistrictTable");
+    renderDatabaseHierarchyBreakdown();
+    renderVillageTypeTownSummary();
+  }
+
+  function renderDatabaseHierarchyBreakdown() {
+    const tableBody = document.getElementById("databaseHierarchyTable");
     if (!tableBody) return;
 
-    const summary = {};
+    const districtMap = {};
 
     databaseData.forEach(row => {
-      const district = String(row.district || "").trim() || "District Not Available";
+      const districtName = String(row.district || "").trim() || "District Not Available";
+      const tehsilName = String(row.tehsil || "").trim() || "Tehsil Not Available";
+      const townName = String(row.town || "").trim() || "Town Not Available";
+      const townKey = getTownUniqueKey(row);
+      const villageType = normalizeVillageType(row.villageType);
 
-      if (!summary[district]) {
-        summary[district] = {
-          totalDatabase: 0,
-          submitted: 0,
-          pending: 0,
-          open: 0,
-          ready: 0,
-          closed: 0,
-          doesnt: 0
-        };
+      if (!districtMap[districtName]) {
+        districtMap[districtName] = createHierarchyNode({
+          district: districtName,
+          tehsil: "",
+          town: "",
+          villageType: ""
+        });
+        districtMap[districtName].tehsils = {};
       }
 
-      summary[district].totalDatabase++;
-    });
+      const districtNode = districtMap[districtName];
+      accumulateHierarchyStats(districtNode, row);
 
-    submittedData.forEach(row => {
-      const district = String(row.district || "").trim() || "District Not Available";
-
-      if (!summary[district]) {
-        summary[district] = {
-          totalDatabase: 0,
-          submitted: 0,
-          pending: 0,
-          open: 0,
-          ready: 0,
-          closed: 0,
-          doesnt: 0
-        };
+      const tehsilKey = buildTehsilKey(row);
+      if (!districtNode.tehsils[tehsilKey]) {
+        districtNode.tehsils[tehsilKey] = createHierarchyNode({
+          district: districtName,
+          tehsil: tehsilName,
+          town: "",
+          villageType: ""
+        });
+        districtNode.tehsils[tehsilKey].towns = {};
       }
 
-      summary[district].submitted++;
+      const tehsilNode = districtNode.tehsils[tehsilKey];
+      accumulateHierarchyStats(tehsilNode, row);
 
-      if (isOpen(row)) summary[district].open++;
-      if (isReady(row)) summary[district].ready++;
-      if (isClosed(row)) summary[district].closed++;
-      if (isDoesntExist(row)) summary[district].doesnt++;
-    });
+      if (!tehsilNode.towns[townKey]) {
+        tehsilNode.towns[townKey] = createHierarchyNode({
+          district: districtName,
+          tehsil: tehsilName,
+          town: townName,
+          uniqueKey: townKey,
+          villageType: villageType
+        });
+      }
 
-    Object.keys(summary).forEach(district => {
-      summary[district].pending = Math.max(
-        summary[district].totalDatabase - summary[district].submitted,
-        0
-      );
+      const townNode = tehsilNode.towns[townKey];
+      if (townNode.label.villageType === "Type Not Available" && villageType !== "Type Not Available") {
+        townNode.label.villageType = villageType;
+      }
+      accumulateHierarchyStats(townNode, row);
     });
 
     let html = "";
 
-    Object.keys(summary)
-      .sort((a, b) => summary[b].totalDatabase - summary[a].totalDatabase)
-      .forEach(district => {
-        html += `
-          <tr>
-            <td><b>${safe(district)}</b></td>
-            <td>${summary[district].totalDatabase}</td>
-            <td>${summary[district].submitted}</td>
-            <td>${summary[district].pending}</td>
-            <td>${summary[district].open}</td>
-            <td>${summary[district].ready}</td>
-            <td>${summary[district].closed}</td>
-            <td>${summary[district].doesnt}</td>
-          </tr>
-        `;
+    Object.keys(districtMap)
+      .sort((a, b) => districtMap[b].total - districtMap[a].total || a.localeCompare(b))
+      .forEach(districtName => {
+        const districtNode = districtMap[districtName];
+        finalizeHierarchyNode(districtNode);
+        html += renderHierarchyRow("district", districtNode);
+
+        Object.keys(districtNode.tehsils)
+          .sort((a, b) => districtNode.tehsils[b].total - districtNode.tehsils[a].total || a.localeCompare(b))
+          .forEach(tehsilKey => {
+            const tehsilNode = districtNode.tehsils[tehsilKey];
+            finalizeHierarchyNode(tehsilNode);
+            html += renderHierarchyRow("tehsil", tehsilNode);
+
+            Object.keys(tehsilNode.towns)
+              .sort((a, b) => tehsilNode.towns[b].total - tehsilNode.towns[a].total || a.localeCompare(b))
+              .forEach(townKey => {
+                const townNode = tehsilNode.towns[townKey];
+                finalizeHierarchyNode(townNode);
+                html += renderHierarchyRow("town", townNode);
+              });
+          });
       });
 
-    if (databaseData.length > 0) {
-      html += `
-        <tr class="summary-row">
-          <td>Total</td>
-          <td>${databaseData.length}</td>
-          <td>${submittedData.length}</td>
-          <td>${Math.max(databaseData.length - submittedData.length, 0)}</td>
-          <td>${submittedData.filter(isOpen).length}</td>
-          <td>${submittedData.filter(isReady).length}</td>
-          <td>${submittedData.filter(isClosed).length}</td>
-          <td>${submittedData.filter(isDoesntExist).length}</td>
-        </tr>
-      `;
-    }
-
-    if (databaseData.length === 0) {
+    if (!html) {
       html = `
         <tr>
-          <td colspan="8" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="12" style="text-align:center; color:#64748b; font-weight:bold;">
             No database data available
           </td>
         </tr>
@@ -1374,6 +1786,351 @@
     }
 
     tableBody.innerHTML = html;
+  }
+
+  function createHierarchyNode(label) {
+    return {
+      label,
+      total: 0,
+      submitted: 0,
+      pending: 0,
+      open: 0,
+      ready: 0,
+      closed: 0,
+      doesnt: 0
+    };
+  }
+
+  function accumulateHierarchyStats(node, row) {
+    node.total++;
+
+    if (isSubmitted(row)) {
+      node.submitted++;
+      if (isOpen(row)) node.open++;
+      if (isReady(row)) node.ready++;
+      if (isClosed(row)) node.closed++;
+      if (isDoesntExist(row)) node.doesnt++;
+    }
+  }
+
+  function finalizeHierarchyNode(node) {
+    node.pending = Math.max(node.total - node.submitted, 0);
+  }
+
+  function renderHierarchyRow(level, item) {
+    const isDistrict = level === "district";
+    const isTehsil = level === "tehsil";
+    const isTown = level === "town";
+    const rowClass = isDistrict ? "level-district" : isTehsil ? "level-tehsil" : "level-town";
+    const indentClass = isDistrict ? "indent-0" : isTehsil ? "indent-1" : "indent-2";
+    const pillClass = isDistrict ? "unit-district" : isTehsil ? "unit-tehsil" : "unit-town";
+    const pillText = isDistrict ? "District" : isTehsil ? "Tehsil" : "Town";
+    const name = isDistrict
+      ? item.label.district
+      : isTehsil
+        ? item.label.tehsil
+        : (item.label.town + " <span style='color:#64748b; font-weight:700;'>[" + safe(item.label.uniqueKey) + "]</span>");
+
+    return `
+      <tr class="${rowClass}">
+        <td class="hierarchy-name ${indentClass}"><span class="unit-pill ${pillClass}">${pillText}</span>${isTown ? name : safe(name)}</td>
+        <td>${safe(display(item.label.district, "-"))}</td>
+        <td>${safe(display(item.label.tehsil, "-"))}</td>
+        <td>${safe(display(item.label.town, "-"))}</td>
+        <td>${safe(display(item.label.villageType, "-"))}</td>
+        <td>${item.total}</td>
+        <td>${item.submitted}</td>
+        <td>${item.pending}</td>
+        <td>${getLiveStatusBadge(item)}</td>
+        <td>${item.open}</td>
+        <td>${item.ready}</td>
+        <td>${formatPercent(item.ready, item.open)}</td>
+      </tr>
+    `;
+  }
+
+  function summarizeUniqueUnitStatus(groupKeyGetter) {
+    const summary = {};
+
+    databaseData.forEach(row => {
+      const key = String(groupKeyGetter(row) || "").trim();
+      if (!key) return;
+
+      if (!summary[key]) {
+        summary[key] = { total: 0, submitted: 0 };
+      }
+
+      summary[key].total++;
+      if (isSubmitted(row)) summary[key].submitted++;
+    });
+
+    const result = { total: 0, started: 0, completed: 0, notStarted: 0 };
+
+    Object.values(summary).forEach(item => {
+      result.total++;
+      if (item.submitted >= item.total && item.total > 0) {
+        result.completed++;
+      } else if (item.submitted > 0) {
+        result.started++;
+      } else {
+        result.notStarted++;
+      }
+    });
+
+    return result;
+  }
+
+
+  function buildVillageTypeTownSummary() {
+    const townGroups = {};
+
+    databaseData.forEach(row => {
+      const townKey = String(getTownUniqueKey(row) || "").trim();
+      if (!townKey) return;
+
+      if (!townGroups[townKey]) {
+        townGroups[townKey] = {
+          villageType: normalizeVillageType(row.villageType),
+          total: 0,
+          submitted: 0,
+          partyVisited: 0,
+          open: 0,
+          ready: 0
+        };
+      }
+
+      if (townGroups[townKey].villageType === "Type Not Available") {
+        townGroups[townKey].villageType = normalizeVillageType(row.villageType);
+      }
+
+      townGroups[townKey].total++;
+      if (isSubmitted(row)) {
+        townGroups[townKey].submitted++;
+        townGroups[townKey].partyVisited++;
+        if (isOpen(row)) townGroups[townKey].open++;
+        if (isReady(row)) townGroups[townKey].ready++;
+      }
+    });
+
+    const typeSummary = {};
+
+    Object.values(townGroups).forEach(item => {
+      const type = item.villageType || "Type Not Available";
+
+      if (!typeSummary[type]) {
+        typeSummary[type] = { total: 0, started: 0, completed: 0, notStarted: 0, partyVisited: 0, open: 0, ready: 0 };
+      }
+
+      typeSummary[type].total++;
+      typeSummary[type].partyVisited += item.partyVisited || 0;
+      typeSummary[type].open += item.open || 0;
+      typeSummary[type].ready += item.ready || 0;
+
+      if (item.submitted >= item.total && item.total > 0) {
+        typeSummary[type].completed++;
+      } else if (item.submitted > 0) {
+        typeSummary[type].started++;
+      } else {
+        typeSummary[type].notStarted++;
+      }
+    });
+
+    return typeSummary;
+  }
+
+  function renderVillageTypeTownCards() {
+    const summary = buildVillageTypeTownSummary();
+    const requiredTypes = ["DHQ", "P1", "P2"];
+
+    requiredTypes.forEach(type => {
+      const item = summary[type] || { total: 0, started: 0, completed: 0, partyVisited: 0, open: 0, ready: 0 };
+      const prefix = type === "DHQ" ? "townDHQ" : "town" + type;
+      const conversion = item.open > 0 ? ((item.ready / item.open) * 100).toFixed(1) + "%" : "0%";
+
+      const totalEl = document.getElementById(prefix + "Total");
+      const startedEl = document.getElementById(prefix + "Started");
+      const completedEl = document.getElementById(prefix + "Completed");
+      const visitedEl = document.getElementById(prefix + "Visited");
+      const openEl = document.getElementById(prefix + "Open");
+      const onboardedEl = document.getElementById(prefix + "Onboarded");
+      const conversionEl = document.getElementById(prefix + "Conversion");
+
+      if (totalEl) totalEl.innerText = item.total || 0;
+      if (startedEl) startedEl.innerText = item.started || 0;
+      if (completedEl) completedEl.innerText = item.completed || 0;
+      if (visitedEl) visitedEl.innerText = item.partyVisited || 0;
+      if (openEl) openEl.innerText = item.open || 0;
+      if (onboardedEl) onboardedEl.innerText = item.ready || 0;
+      if (conversionEl) conversionEl.innerText = conversion;
+    });
+  }
+
+  function renderVillageTypeTownSummary() {
+    const tableBody = document.getElementById("villageTypeTownSummaryTable");
+    if (!tableBody) return;
+
+    const typeSummary = buildVillageTypeTownSummary();
+    const preferredOrder = ["DHQ", "P1", "P2"];
+    const remainingTypes = Object.keys(typeSummary).filter(type => !preferredOrder.includes(type)).sort((a, b) => a.localeCompare(b));
+    const orderedTypes = preferredOrder.filter(type => typeSummary[type]).concat(remainingTypes);
+
+    let html = "";
+
+    orderedTypes.forEach(type => {
+      const item = typeSummary[type];
+      html += `
+        <tr>
+          <td><b>${safe(type)}</b></td>
+          <td>${item.total}</td>
+          <td>${item.started}</td>
+          <td>${item.completed}</td>
+          <td>${item.notStarted}</td>
+        </tr>
+      `;
+    });
+
+    if (Object.keys(typeSummary).length > 0) {
+      const totals = Object.values(typeSummary).reduce((acc, item) => {
+        acc.total += item.total;
+        acc.started += item.started;
+        acc.completed += item.completed;
+        acc.notStarted += item.notStarted;
+        return acc;
+      }, { total: 0, started: 0, completed: 0, notStarted: 0 });
+
+      html += `
+        <tr class="summary-row">
+          <td>Total</td>
+          <td>${totals.total}</td>
+          <td>${totals.started}</td>
+          <td>${totals.completed}</td>
+          <td>${totals.notStarted}</td>
+        </tr>
+      `;
+    }
+
+    if (Object.keys(typeSummary).length === 0) {
+      html = `
+        <tr>
+          <td colspan="5" style="text-align:center; color:#64748b; font-weight:bold;">
+            No town / village type data available
+          </td>
+        </tr>
+      `;
+    }
+
+    tableBody.innerHTML = html;
+  }
+
+  function renderLiveStatusTable(config) {
+    const tableBody = document.getElementById(config.tableId);
+    if (!tableBody) return;
+
+    const summary = {};
+
+    databaseData.forEach(row => {
+      const key = String(config.groupKeyGetter(row) || "").trim();
+      if (!key) return;
+
+      if (!summary[key]) {
+        summary[key] = {
+          label: config.labelGetter(row),
+          total: 0,
+          submitted: 0,
+          pending: 0,
+          open: 0,
+          ready: 0,
+          conversion: 0,
+          closed: 0,
+          doesnt: 0
+        };
+      }
+
+      summary[key].total++;
+      if (isSubmitted(row)) {
+        summary[key].submitted++;
+        if (isOpen(row)) summary[key].open++;
+        if (isReady(row)) summary[key].ready++;
+        if (isClosed(row)) summary[key].closed++;
+        if (isDoesntExist(row)) summary[key].doesnt++;
+      }
+    });
+
+    Object.keys(summary).forEach(key => {
+      summary[key].pending = Math.max(summary[key].total - summary[key].submitted, 0);
+    });
+
+    let html = "";
+
+    Object.values(summary)
+      .sort((a, b) => b.total - a.total)
+      .forEach(item => {
+        html += config.rowRenderer(item);
+      });
+
+    if (Object.keys(summary).length === 0) {
+      html = `
+        <tr>
+          <td colspan="${config.emptyColspan}" style="text-align:center; color:#64748b; font-weight:bold;">
+            No database data available
+          </td>
+        </tr>
+      `;
+    }
+
+    tableBody.innerHTML = html;
+  }
+
+  function isSubmitted(row) {
+    const verifiedText = String(row.verified || "").toLowerCase().trim();
+    const hasVerifiedYes = verifiedText === "yes" || verifiedText === "y" || verifiedText === "true";
+    const hasValidSubmissionTime = parseFlexibleDate(row.submissionTime) !== null;
+    return hasVerifiedYes || hasValidSubmissionTime;
+  }
+
+  function buildTehsilKey(row) {
+    return [row.district, row.tehsil]
+      .map(v => String(v || "").trim())
+      .filter(Boolean)
+      .join(" | ") || "Tehsil Not Available";
+  }
+
+  function getTownUniqueKey(row) {
+    const unique = String(row.uniqueKey || "").trim();
+    if (unique) return unique;
+
+    return [row.state, row.district, row.tehsil, row.town]
+      .map(v => String(v || "").trim())
+      .filter(Boolean)
+      .join(" | ") || "Town Not Available";
+  }
+
+  function normalizeVillageType(value) {
+    const text = String(value || "").trim();
+    if (!text) return "Type Not Available";
+
+    const upper = text.toUpperCase().replace(/\s+/g, "");
+    if (upper.includes("DHQ") || upper.includes("DISTRICTHQ") || upper.includes("DISTRICTHEADQUARTER")) return "DHQ";
+    if (upper.includes("P1")) return "P1";
+    if (upper.includes("P2")) return "P2";
+    if (upper.includes("P3")) return "P3";
+    return text;
+  }
+
+  function getLiveStatusBadge(item) {
+    if (item.submitted >= item.total && item.total > 0) {
+      return `<span class="badge badge-ready">Completed</span>`;
+    }
+    if (item.submitted > 0) {
+      return `<span class="badge badge-open">Started</span>`;
+    }
+    return `<span class="badge badge-no">Not Started</span>`;
+  }
+
+  function formatPercent(numerator, denominator) {
+    const den = Number(denominator || 0);
+    if (!den) return "0%";
+    return ((Number(numerator || 0) / den) * 100).toFixed(1).replace(/\.0$/, "") + "%";
   }
 
   function statusText(row) {
@@ -1429,6 +2186,7 @@
     document.getElementById(type + "Ready").innerText = data.filter(isReady).length;
     document.getElementById(type + "Closed").innerText = data.filter(isClosed).length;
     document.getElementById(type + "Doesnt").innerText = data.filter(isDoesntExist).length;
+    document.getElementById(type + "Conversion").innerText = formatPercent(data.filter(isReady).length, data.filter(isOpen).length);
   }
 
   function getTodayData() {
@@ -1558,6 +2316,7 @@
           total: 0,
           open: 0,
           ready: 0,
+          conversion: 0,
           closed: 0,
           doesnt: 0
         };
@@ -1582,6 +2341,7 @@
             <td>${summary[name].total}</td>
             <td>${summary[name].open}</td>
             <td>${summary[name].ready}</td>
+            <td>${formatPercent(summary[name].ready, summary[name].open)}</td>
             <td>${summary[name].closed}</td>
             <td>${summary[name].doesnt}</td>
           </tr>
@@ -1597,6 +2357,7 @@
           <td>${validRows.length}</td>
           <td>${validRows.filter(isOpen).length}</td>
           <td>${validRows.filter(isReady).length}</td>
+          <td>${formatPercent(validRows.filter(isReady).length, validRows.filter(isOpen).length)}</td>
           <td>${validRows.filter(isClosed).length}</td>
           <td>${validRows.filter(isDoesntExist).length}</td>
         </tr>
@@ -1606,7 +2367,7 @@
     if (validRows.length === 0) {
       html = `
         <tr>
-          <td colspan="6" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="7" style="text-align:center; color:#64748b; font-weight:bold;">
             No data available
           </td>
         </tr>
@@ -1861,6 +2622,8 @@
           <td>${safe(display(row.district))}</td>
           <td>${safe(display(row.tehsil))}</td>
           <td>${safe(display(row.town))}</td>
+          <td>${safe(display(normalizeVillageType(row.villageType)))}</td>
+          <td>${safe(display(getTownUniqueKey(row)))}</td>
           <td>${safe(display(row.estimatedOutletUniverse))}</td>
           <td>${safe(salesTeam)}</td>
           <td>${statusBadge}</td>
@@ -1878,7 +2641,7 @@
     if (partyRows.length === 0) {
       html = `
         <tr>
-          <td colspan="17" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="19" style="text-align:center; color:#64748b; font-weight:bold;">
             No party found for selected Sales Team / Status filter
           </td>
         </tr>
@@ -1936,6 +2699,8 @@
       "District",
       "Tehsil",
       "Town",
+      "Village Type",
+      "Unique Key",
       "Estimated Outlet Universe",
       "Verified",
       "Submission Time",
@@ -1974,6 +2739,8 @@
         row.district,
         row.tehsil,
         row.town,
+        normalizeVillageType(row.villageType),
+        getTownUniqueKey(row),
         row.estimatedOutletUniverse,
         row.verified,
         row.submissionTime,
