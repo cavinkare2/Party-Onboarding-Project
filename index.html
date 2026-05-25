@@ -545,6 +545,16 @@
     }
 
     .dot-green { background: #16a34a; }
+    .dot-green-check {
+      background: #16a34a;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      line-height: 1;
+    }
     .dot-orange { background: #ea580c; }
     .dot-red { background: #dc2626; }
     .dot-gray { background: #4b5563; }
@@ -557,8 +567,18 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
-    .marker-open { background: #ea580c; }
-    .marker-ready { background: #16a34a; }
+    .marker-open { background: #16a34a; }
+    .marker-ready {
+      background: #16a34a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .marker-ready::before { content: "✓"; }
     .marker-closed { background: #dc2626; }
     .marker-doesnt { background: #4b5563; }
 
@@ -884,8 +904,8 @@
     <h2>Visited Location Map</h2>
 
     <div class="map-legend">
-      <div class="legend-item"><span class="dot dot-green"></span> Onboarded</div>
-      <div class="legend-item"><span class="dot dot-orange"></span> Open</div>
+      <div class="legend-item"><span class="dot dot-green-check">✓</span> Onboarded</div>
+      <div class="legend-item"><span class="dot dot-green"></span> Open</div>
       <div class="legend-item"><span class="dot dot-red"></span> Closed</div>
       <div class="legend-item"><span class="dot dot-gray"></span> Doesn’t exist</div>
     </div>
