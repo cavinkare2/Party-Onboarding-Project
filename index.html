@@ -890,7 +890,7 @@
     }
 
     .tracker-panel h2 {
-      margin: 0 0 6px;
+      margin: 0 0 4px;
       font-size: 22px;
       color: #111827;
       border-bottom: 1px solid #e5e7eb;
@@ -910,7 +910,7 @@
       width: 100%;
       height: 430px;
       position: relative;
-      padding-top: 8px;
+      padding-top: 0;
     }
 
     .tracker-empty {
@@ -1153,7 +1153,6 @@
 
   <div class="tracker-panel">
     <h2>Datewise Tracker</h2>
-    <p class="tracker-note">.</p>
     <div id="dateTrackerEmpty" class="tracker-empty">No valid Date Correct data available for this state.</div>
     <div class="tracker-chart-wrap">
       <canvas id="dateTrackerChart"></canvas>
@@ -2394,6 +2393,8 @@
     const visitedValues = dateKeys.map(key => counts[key].visited);
     const openValues = dateKeys.map(key => counts[key].open);
     const onboardedValues = dateKeys.map(key => counts[key].onboarded);
+    const trackerMaxValue = Math.max(...visitedValues, ...openValues, ...onboardedValues, 0);
+    const trackerSuggestedMax = trackerMaxValue > 0 ? Math.ceil(trackerMaxValue * 1.18) : 10;
 
     const valueLabelPlugin = {
       id: "valueLabelPlugin",
@@ -2492,7 +2493,7 @@
             position: "top",
             align: "center",
             labels: {
-              padding: 26,
+              padding: 14,
               boxWidth: 28,
               boxHeight: 10,
               font: {
@@ -2510,7 +2511,7 @@
         },
         layout: {
           padding: {
-            top: 34
+            top: 12
           }
         },
         scales: {
@@ -2524,6 +2525,7 @@
           },
           y: {
             beginAtZero: true,
+            suggestedMax: trackerSuggestedMax,
             ticks: {
               precision: 0,
               stepSize: 1
