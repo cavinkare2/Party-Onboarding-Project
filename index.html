@@ -2400,14 +2400,25 @@
         const ctx = chart.ctx;
         ctx.save();
         ctx.font = "bold 12px Arial";
-        ctx.fillStyle = "#0f172a";
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
 
-        const barMeta = chart.getDatasetMeta(0);
-        barMeta.data.forEach((bar, index) => {
-          const value = visitedValues[index];
-          ctx.fillText(value, bar.x, bar.y - 6);
+        const labelConfigs = [
+          { datasetIndex: 1, values: visitedValues, color: "#dc2626", offset: 12 },
+          { datasetIndex: 2, values: openValues, color: "#1d4ed8", offset: 12 },
+          { datasetIndex: 3, values: onboardedValues, color: "#16a34a", offset: 12 }
+        ];
+
+        labelConfigs.forEach(config => {
+          const meta = chart.getDatasetMeta(config.datasetIndex);
+          if (!meta || meta.hidden) return;
+
+          ctx.fillStyle = config.color;
+          meta.data.forEach((point, index) => {
+            const value = config.values[index];
+            if (value === null || value === undefined || value === "") return;
+            ctx.fillText(value, point.x, point.y - config.offset);
+          });
         });
 
         ctx.restore();
