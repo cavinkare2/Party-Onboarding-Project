@@ -908,8 +908,9 @@
 
     .tracker-chart-wrap {
       width: 100%;
-      height: 380px;
+      height: 430px;
       position: relative;
+      padding-top: 8px;
     }
 
     .tracker-empty {
@@ -2488,7 +2489,16 @@
         plugins: {
           legend: {
             display: true,
-            position: "top"
+            position: "top",
+            align: "center",
+            labels: {
+              padding: 26,
+              boxWidth: 28,
+              boxHeight: 10,
+              font: {
+                weight: "bold"
+              }
+            }
           },
           tooltip: {
             callbacks: {
@@ -2496,6 +2506,11 @@
                 return context.dataset.label + ": " + context.parsed.y;
               }
             }
+          }
+        },
+        layout: {
+          padding: {
+            top: 34
           }
         },
         scales: {
