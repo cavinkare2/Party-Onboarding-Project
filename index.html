@@ -2359,7 +2359,18 @@
       if (!parsedDate) return;
 
       const key = normalizeDateKey(parsedDate);
-      counts[key] = (counts[key] || 0) + 1;
+
+      if (!counts[key]) {
+        counts[key] = {
+          visited: 0,
+          open: 0,
+          onboarded: 0
+        };
+      }
+
+      counts[key].visited++;
+      if (isOpen(row)) counts[key].open++;
+      if (isReady(row)) counts[key].onboarded++;
     });
 
     const dateKeys = Object.keys(counts).sort((a, b) => a.localeCompare(b));
@@ -2379,7 +2390,9 @@
     canvas.style.display = "block";
 
     const labels = dateKeys.map(formatDateLabel);
-    const values = dateKeys.map(key => counts[key]);
+    const visitedValues = dateKeys.map(key => counts[key].visited);
+    const openValues = dateKeys.map(key => counts[key].open);
+    const onboardedValues = dateKeys.map(key => counts[key].onboarded);
 
     const valueLabelPlugin = {
       id: "valueLabelPlugin",
@@ -2391,9 +2404,9 @@
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
 
-        const meta = chart.getDatasetMeta(0);
-        meta.data.forEach((bar, index) => {
-          const value = values[index];
+        const barMeta = chart.getDatasetMeta(0);
+        barMeta.data.forEach((bar, index) => {
+          const value = visitedValues[index];
           ctx.fillText(value, bar.x, bar.y - 6);
         });
 
@@ -2408,16 +2421,44 @@
         datasets: [
           {
             type: "bar",
-            label: "Datewise Count",
-            data: values,
+            label: "Total Visited - Bar",
+            data: visitedValues,
+            backgroundColor: "rgba(100, 116, 139, 0.28)",
+            borderColor: "#64748b",
             borderWidth: 1,
             borderRadius: 8,
             yAxisID: "y"
           },
           {
             type: "line",
-            label: "Trend Line",
-            data: values,
+            label: "Visited Trend",
+            data: visitedValues,
+            borderColor: "#dc2626",
+            backgroundColor: "#dc2626",
+            borderWidth: 3,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 6,
+            yAxisID: "y"
+          },
+          {
+            type: "line",
+            label: "Open Trend",
+            data: openValues,
+            borderColor: "#1d4ed8",
+            backgroundColor: "#1d4ed8",
+            borderWidth: 3,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 6,
+            yAxisID: "y"
+          },
+          {
+            type: "line",
+            label: "Onboarded Trend",
+            data: onboardedValues,
+            borderColor: "#16a34a",
+            backgroundColor: "#16a34a",
             borderWidth: 3,
             tension: 0.3,
             pointRadius: 5,
@@ -2429,6 +2470,10 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: "index",
+          intersect: false
+        },
         plugins: {
           legend: {
             display: true,
@@ -2459,7 +2504,7 @@
             },
             title: {
               display: true,
-              text: "Submitted Count"
+              text: "Count"
             }
           }
         }
