@@ -6,6 +6,7 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* Layout patched to prevent GitHub Pages horizontal overflow */
@@ -878,6 +879,50 @@
       cursor: pointer;
     }
 
+
+    .tracker-panel {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      margin-bottom: 26px;
+      border: 1px solid #dbeafe;
+    }
+
+    .tracker-panel h2 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+      text-align: center;
+    }
+
+    .tracker-note {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: bold;
+      margin: 0 0 14px;
+    }
+
+    .tracker-chart-wrap {
+      width: 100%;
+      height: 380px;
+      position: relative;
+    }
+
+    .tracker-empty {
+      text-align: center;
+      color: #64748b;
+      font-weight: bold;
+      padding: 45px 10px;
+      display: none;
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      background: #f8fafc;
+    }
+
     @media(max-width: 1200px) {
       .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .container { padding: 20px; }
@@ -952,7 +997,8 @@
     <div class="state-label">Select State:</div>
 
     <div class="state-buttons">
-      <button class="state-btn active" id="btnUP" onclick="changeSheet('UP')">Uttar Pradesh</button>
+      <button class="state-btn active" id="btnALL" onclick="changeSheet('ALL')">ALL</button>
+      <button class="state-btn" id="btnUP" onclick="changeSheet('UP')">Uttar Pradesh</button>
       <button class="state-btn" id="btnMP" onclick="changeSheet('MP')">Madhya Pradesh</button>
       <button class="state-btn" id="btnMAH" onclick="changeSheet('MAH')">Maharashtra</button>
     </div>
@@ -1101,6 +1147,15 @@
       <p style="text-align:center; color:#64748b; font-weight:bold; margin-top:14px;">
         Town-level rows are now shown under their correct District and Tehsil in the hierarchy table above.
       </p>
+    </div>
+  </div>
+
+  <div class="tracker-panel">
+    <h2>Datewise Tracker</h2>
+    <p class="tracker-note">.</p>
+    <div id="dateTrackerEmpty" class="tracker-empty">No valid Date Correct data available for this state.</div>
+    <div class="tracker-chart-wrap">
+      <canvas id="dateTrackerChart"></canvas>
     </div>
   </div>
 
@@ -1294,7 +1349,7 @@
     <div id="map"></div>
   </div>
 
-  <div class="box">
+  <div class="box" id="partyListBox">
     <h2>Party List With Photos</h2>
 
     <div class="filter-row">
@@ -1332,6 +1387,7 @@
             <th>Estimated Activation Date</th>
             <th>Distance from Centre</th>
             <th>Submission Time</th>
+            <th>Date Correct</th>
             <th>Remarks</th>
           </tr>
         </thead>
@@ -1365,7 +1421,9 @@
     }
   };
 
-  let currentSheet = "UP";
+  const ALL_SHEET_KEYS = ["UP", "MP", "MAH"];
+
+  let currentSheet = "ALL";
   let rawData = [];
   let databaseData = [];
   let submittedData = [];
@@ -1376,18 +1434,24 @@
   let map;
   let mapMarkers = [];
   let currentScript = null;
+  let dateTrackerChart = null;
+  let isAllLoading = false;
+  let allLoadIndex = 0;
+  let activeLoadingSheetKey = "ALL";
 
   window.onload = function() {
-    loadSheet("UP");
+    loadSheet("ALL");
   };
 
   function changeSheet(sheetKey) {
     currentSheet = sheetKey;
 
-    document.getElementById("btnUP").classList.remove("active");
-    document.getElementById("btnMP").classList.remove("active");
-    document.getElementById("btnMAH").classList.remove("active");
+    ["btnALL", "btnUP", "btnMP", "btnMAH"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove("active");
+    });
 
+    if (sheetKey === "ALL") document.getElementById("btnALL").classList.add("active");
     if (sheetKey === "UP") document.getElementById("btnUP").classList.add("active");
     if (sheetKey === "MP") document.getElementById("btnMP").classList.add("active");
     if (sheetKey === "MAH") document.getElementById("btnMAH").classList.add("active");
@@ -1410,8 +1474,25 @@
     clearMapMarkers();
 
     document.getElementById("loading").style.display = "block";
-    document.getElementById("loading").innerHTML = "Loading " + SHEETS[sheetKey].name + " data...";
 
+    if (currentScript) currentScript.remove();
+
+    if (sheetKey === "ALL") {
+      isAllLoading = true;
+      allLoadIndex = 0;
+      activeLoadingSheetKey = ALL_SHEET_KEYS[0];
+      document.getElementById("loading").innerHTML = "Loading ALL states data...";
+      loadNextAllSheet();
+      return;
+    }
+
+    isAllLoading = false;
+    activeLoadingSheetKey = sheetKey;
+    document.getElementById("loading").innerHTML = "Loading " + SHEETS[sheetKey].name + " data...";
+    loadSingleSheet(sheetKey);
+  }
+
+  function loadSingleSheet(sheetKey) {
     if (currentScript) currentScript.remove();
 
     const url =
@@ -1428,67 +1509,35 @@
     document.body.appendChild(currentScript);
   }
 
+  function loadNextAllSheet() {
+    if (allLoadIndex >= ALL_SHEET_KEYS.length) {
+      isAllLoading = false;
+      databaseData = rawData.filter(isDatabaseRow);
+      submittedData = databaseData.filter(isSubmitted);
+      document.getElementById("loading").style.display = "none";
+      renderDashboard();
+      return;
+    }
+
+    activeLoadingSheetKey = ALL_SHEET_KEYS[allLoadIndex];
+    document.getElementById("loading").innerHTML =
+      "Loading ALL states data... " + SHEETS[activeLoadingSheetKey].name;
+    loadSingleSheet(activeLoadingSheetKey);
+  }
+
   function handleSheetData(response) {
     try {
-      const rows = response.table.rows || [];
-      const headerMap = buildHeaderMap(response.table.cols || []);
+      const parsedRows = parseSheetResponse(response, activeLoadingSheetKey);
 
-      rawData = rows.map(r => {
-        const c = r.c || [];
+      if (isAllLoading) {
+        rawData = rawData.concat(parsedRows);
+        allLoadIndex++;
+        loadNextAllSheet();
+        return;
+      }
 
-        return {
-          rtr: getByHeader(c, headerMap, ["RTR Code", "RTR_Code", "RTR"], [0]),
-          state: getByHeader(c, headerMap, ["State"], [1]),
-          party: getByHeader(c, headerMap, ["Party Name", "Party_Name", "Party"], [2]),
-          latitude: getByHeader(c, headerMap, ["Latitude", "Lat"], [3]),
-          longitude: getByHeader(c, headerMap, ["Longitude", "Long", "Lng"], [4]),
-          district: getByHeader(c, headerMap, ["District"], [5]),
-          tehsil: getByHeader(c, headerMap, ["Tehsil"], [6]),
-          town: getByHeader(c, headerMap, ["Town"], [7]),
-          villageType: getByHeader(c, headerMap, ["Village Type", "Village_Type", "Type", "P Type", "Priority", "P1/P2"], []),
-          uniqueKey: getByHeader(c, headerMap, ["Unique", "Unique Key", "Unique_Key", "Town Unique", "Town_Unique", "Unique Town", "Unique_Town"], []),
-          estimatedOutletUniverse: getByHeader(
-            c,
-            headerMap,
-            [
-              "Estimated_Outlet_Universe",
-              "Estimated Outlet Universe",
-              "EstimatedOutletUniverse",
-              "Estimated Outlet_Universe",
-              "Outlet Universe",
-              "Estimated Universe"
-            ],
-            []
-          ),
-          verified: getByHeader(c, headerMap, ["Verified", "Verification Status"], [9]),
-          submissionTime: getByHeader(c, headerMap, ["Submission Time", "Submission_Time", "Timestamp", "Time Stamp"], [10]),
-          sde: getByHeader(c, headerMap, ["Sales Team", "Sales_Team", "SDE"], [11]),
-          liveLat: getByHeader(c, headerMap, ["Live Lat", "Live_Lat", "Live Latitude"], [12]),
-          liveLong: getByHeader(c, headerMap, ["Live Long", "Live_Long", "Live Longitude"], [13]),
-          distance: getByHeader(c, headerMap, ["Distance from Centre", "Distance_from_Centre", "Distance"], [14]),
-          status: getByHeader(c, headerMap, ["Status"], [15]),
-          photo: getByHeader(c, headerMap, ["Photo", "Photo Link", "Image", "Image Link"], [16]),
-          owner: getByHeader(c, headerMap, ["Owner", "Owner Name", "Owner_Name"], [17]),
-          phone: getByHeader(c, headerMap, ["Phone", "Phone Number", "Mobile", "Mobile Number"], [18]),
-          ready: getByHeader(c, headerMap, ["Onboarded", "Ready", "Ready for Onboarding"], [19]),
-          estimatedActivationDate: getByHeader(
-            c,
-            headerMap,
-            [
-              "Estimated_Activation_Date",
-              "Estimated Activation Date",
-              "EstimatedActivationDate",
-              "Activation Date",
-              "Estimated Activation"
-            ],
-            [22, 20]
-          ),
-          remarks: getByHeader(c, headerMap, ["Remarks", "Remark", "Comments", "Comment"], [21, 22])
-        };
-      });
-
+      rawData = parsedRows;
       databaseData = rawData.filter(isDatabaseRow);
-
       submittedData = databaseData.filter(isSubmitted);
 
       document.getElementById("loading").style.display = "none";
@@ -1500,6 +1549,67 @@
         "Data loading failed. Check sheet sharing permission, sheet gid, and column order.";
       console.error(error);
     }
+  }
+
+  function parseSheetResponse(response, sourceSheetKey) {
+    const rows = response.table.rows || [];
+    const headerMap = buildHeaderMap(response.table.cols || []);
+    const sourceStateName = SHEETS[sourceSheetKey] ? SHEETS[sourceSheetKey].name : "";
+
+    return rows.map(r => {
+      const c = r.c || [];
+
+      return {
+        rtr: getByHeader(c, headerMap, ["RTR Code", "RTR_Code", "RTR"], [0]),
+        state: getByHeader(c, headerMap, ["State"], [1]) || sourceStateName,
+        party: getByHeader(c, headerMap, ["Party Name", "Party_Name", "Party"], [2]),
+        latitude: getByHeader(c, headerMap, ["Latitude", "Lat"], [3]),
+        longitude: getByHeader(c, headerMap, ["Longitude", "Long", "Lng"], [4]),
+        district: getByHeader(c, headerMap, ["District"], [5]),
+        tehsil: getByHeader(c, headerMap, ["Tehsil"], [6]),
+        town: getByHeader(c, headerMap, ["Town"], [7]),
+        villageType: getByHeader(c, headerMap, ["Village Type", "Village_Type", "Type", "P Type", "Priority", "P1/P2"], []),
+        uniqueKey: getByHeader(c, headerMap, ["Unique", "Unique Key", "Unique_Key", "Town Unique", "Town_Unique", "Unique Town", "Unique_Town"], []),
+        estimatedOutletUniverse: getByHeader(
+          c,
+          headerMap,
+          [
+            "Estimated_Outlet_Universe",
+            "Estimated Outlet Universe",
+            "EstimatedOutletUniverse",
+            "Estimated Outlet_Universe",
+            "Outlet Universe",
+            "Estimated Universe"
+          ],
+          []
+        ),
+        verified: getByHeader(c, headerMap, ["Verified", "Verification Status"], [9]),
+        submissionTime: getByHeader(c, headerMap, ["Submission Time", "Submission_Time", "Timestamp", "Time Stamp"], [10]),
+        dateCorrect: getByHeader(c, headerMap, ["Date Correct", "Date_Correct", "Correct Date", "Correct_Date", "DateCorrect"], []),
+        sde: getByHeader(c, headerMap, ["Sales Team", "Sales_Team", "SDE"], [11]),
+        liveLat: getByHeader(c, headerMap, ["Live Lat", "Live_Lat", "Live Latitude"], [12]),
+        liveLong: getByHeader(c, headerMap, ["Live Long", "Live_Long", "Live Longitude"], [13]),
+        distance: getByHeader(c, headerMap, ["Distance from Centre", "Distance_from_Centre", "Distance"], [14]),
+        status: getByHeader(c, headerMap, ["Status"], [15]),
+        photo: getByHeader(c, headerMap, ["Photo", "Photo Link", "Image", "Image Link"], [16]),
+        owner: getByHeader(c, headerMap, ["Owner", "Owner Name", "Owner_Name"], [17]),
+        phone: getByHeader(c, headerMap, ["Phone", "Phone Number", "Mobile", "Mobile Number"], [18]),
+        ready: getByHeader(c, headerMap, ["Onboarded", "Ready", "Ready for Onboarding"], [19]),
+        estimatedActivationDate: getByHeader(
+          c,
+          headerMap,
+          [
+            "Estimated_Activation_Date",
+            "Estimated Activation Date",
+            "EstimatedActivationDate",
+            "Activation Date",
+            "Estimated Activation"
+          ],
+          [22, 20]
+        ),
+        remarks: getByHeader(c, headerMap, ["Remarks", "Remark", "Comments", "Comment"], [21, 22])
+      };
+    });
   }
 
   function isDatabaseRow(row) {
@@ -1587,6 +1697,14 @@
     document.getElementById("todayDoesnt").innerText = "0";
     document.getElementById("todayConversion").innerText = "0%";
 
+    const dateTrackerEmpty = document.getElementById("dateTrackerEmpty");
+    if (dateTrackerEmpty) dateTrackerEmpty.style.display = "none";
+
+    if (dateTrackerChart) {
+      dateTrackerChart.destroy();
+      dateTrackerChart = null;
+    }
+
     document.getElementById("overallSalesTeamTable").innerHTML = "";
     document.getElementById("todaySalesTeamTable").innerHTML = "";
     document.getElementById("overallDistrictTable").innerHTML = "";
@@ -1623,6 +1741,7 @@
 
     renderDatabaseCards();
     renderDatabaseDistrictBreakdown();
+    renderDatewiseTracker();
     renderKPICards(submittedData, "overall");
     renderKPICards(todayData, "today");
 
@@ -1633,8 +1752,15 @@
     renderGroupSummary(todayData, "district", "todayDistrictTable");
 
     renderMap();
-    renderSalesTeamDropdown();
-    renderPartyTable();
+
+    const partyListBox = document.getElementById("partyListBox");
+    if (currentSheet === "ALL") {
+      if (partyListBox) partyListBox.style.display = "none";
+    } else {
+      if (partyListBox) partyListBox.style.display = "block";
+      renderSalesTeamDropdown();
+      renderPartyTable();
+    }
   }
 
   function renderDatabaseCards() {
@@ -2193,7 +2319,7 @@
     const today = new Date();
 
     return submittedData.filter(row => {
-      const parsedDate = parseFlexibleDate(row.submissionTime);
+      const parsedDate = getDateCorrectValue(row);
       if (!parsedDate) return false;
 
       return (
@@ -2201,6 +2327,144 @@
         parsedDate.getMonth() === today.getMonth() &&
         parsedDate.getFullYear() === today.getFullYear()
       );
+    });
+  }
+
+  function getDateCorrectValue(row) {
+    return parseFlexibleDate(row.dateCorrect);
+  }
+
+  function normalizeDateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return year + "-" + month + "-" + day;
+  }
+
+  function formatDateLabel(dateKey) {
+    const parts = dateKey.split("-");
+    if (parts.length !== 3) return dateKey;
+    return parts[2] + "/" + parts[1] + "/" + parts[0];
+  }
+
+  function renderDatewiseTracker() {
+    const canvas = document.getElementById("dateTrackerChart");
+    const emptyBox = document.getElementById("dateTrackerEmpty");
+    if (!canvas) return;
+
+    const counts = {};
+
+    submittedData.forEach(row => {
+      const parsedDate = getDateCorrectValue(row);
+      if (!parsedDate) return;
+
+      const key = normalizeDateKey(parsedDate);
+      counts[key] = (counts[key] || 0) + 1;
+    });
+
+    const dateKeys = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+
+    if (dateTrackerChart) {
+      dateTrackerChart.destroy();
+      dateTrackerChart = null;
+    }
+
+    if (dateKeys.length === 0 || typeof Chart === "undefined") {
+      if (emptyBox) emptyBox.style.display = "block";
+      canvas.style.display = "none";
+      return;
+    }
+
+    if (emptyBox) emptyBox.style.display = "none";
+    canvas.style.display = "block";
+
+    const labels = dateKeys.map(formatDateLabel);
+    const values = dateKeys.map(key => counts[key]);
+
+    const valueLabelPlugin = {
+      id: "valueLabelPlugin",
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+        ctx.font = "bold 12px Arial";
+        ctx.fillStyle = "#0f172a";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+
+        const meta = chart.getDatasetMeta(0);
+        meta.data.forEach((bar, index) => {
+          const value = values[index];
+          ctx.fillText(value, bar.x, bar.y - 6);
+        });
+
+        ctx.restore();
+      }
+    };
+
+    dateTrackerChart = new Chart(canvas, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            type: "bar",
+            label: "Datewise Count",
+            data: values,
+            borderWidth: 1,
+            borderRadius: 8,
+            yAxisID: "y"
+          },
+          {
+            type: "line",
+            label: "Trend Line",
+            data: values,
+            borderWidth: 3,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 6,
+            yAxisID: "y"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: "top"
+          },
+          tooltip: {
+            callbacks: {
+              label(context) {
+                return context.dataset.label + ": " + context.parsed.y;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              font: { weight: "bold" }
+            },
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0,
+              stepSize: 1
+            },
+            title: {
+              display: true,
+              text: "Submitted Count"
+            }
+          }
+        }
+      },
+      plugins: [valueLabelPlugin]
     });
   }
 
@@ -2218,6 +2482,19 @@
       .replace(/\s+/g, " ");
 
     if (!text) return null;
+
+    const invalidDateText = text.toLowerCase();
+    if (
+      invalidDateText === "#n/a" ||
+      invalidDateText === "n/a" ||
+      invalidDateText === "na" ||
+      invalidDateText === "#value!" ||
+      invalidDateText === "#ref!" ||
+      invalidDateText === "#div/0!" ||
+      invalidDateText === "not available"
+    ) {
+      return null;
+    }
 
     const googleDate = text.match(/^Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})(?:,\s*(\d{1,2}),\s*(\d{1,2}),\s*(\d{1,2}))?\)$/);
     if (googleDate) {
@@ -2633,6 +2910,7 @@
           <td>${activationDateHtml}</td>
           <td>${safe(display(row.distance))} m</td>
           <td>${safe(display(row.submissionTime))}</td>
+          <td>${safe(display(row.dateCorrect))}</td>
           <td>${safe(display(row.remarks))}</td>
         </tr>
       `;
@@ -2641,7 +2919,7 @@
     if (partyRows.length === 0) {
       html = `
         <tr>
-          <td colspan="19" style="text-align:center; color:#64748b; font-weight:bold;">
+          <td colspan="20" style="text-align:center; color:#64748b; font-weight:bold;">
             No party found for selected Sales Team / Status filter
           </td>
         </tr>
@@ -2704,6 +2982,7 @@
       "Estimated Outlet Universe",
       "Verified",
       "Submission Time",
+      "Date Correct",
       "Sales Team",
       "Live Lat",
       "Live Long",
@@ -2744,6 +3023,7 @@
         row.estimatedOutletUniverse,
         row.verified,
         row.submissionTime,
+        row.dateCorrect,
         row.sde,
         row.liveLat,
         row.liveLong,
@@ -2855,7 +3135,7 @@
     if (databaseData.length === 0) {
       document.getElementById("loading").style.display = "block";
       document.getElementById("loading").innerHTML =
-        "No database rows found. Check sheet sharing permission, selected state tab, and sheet gid.";
+        "No database rows found. Check sheet sharing permission, selected state / ALL tabs, and sheet gid.";
     } else if (submittedData.length === 0) {
       document.getElementById("loading").style.display = "block";
       document.getElementById("loading").innerHTML =
