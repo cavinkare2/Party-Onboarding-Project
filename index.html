@@ -7,7 +7,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    *{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{font-family:Arial,sans-serif;background:#eef2f7;margin:0;color:#1f2937}.header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;padding:24px 30px;border-bottom-left-radius:30px;border-bottom-right-radius:30px;box-shadow:0 6px 22px rgba(0,0,0,.22);position:relative}.top-download-btn{position:absolute;top:24px;right:30px;border:none;padding:12px 22px;border-radius:999px;cursor:pointer;font-weight:bold;background:white;color:#1d4ed8;box-shadow:0 4px 14px rgba(0,0,0,.22);z-index:5}.top-download-btn:hover{background:#f1f5f9}.daily-report-btn{top:74px;right:30px;background:#dcfce7;color:#166534}.daily-report-btn:hover{background:#bbf7d0}.brand-row{display:flex;align-items:center;gap:18px;margin-bottom:18px}.logo{height:58px;width:auto;object-fit:contain;background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;display:block}.header h1{margin:0;font-size:32px;font-weight:800;letter-spacing:.3px}.state-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.state-label{font-weight:bold;font-size:15px;color:white;opacity:.95}.state-buttons{display:flex;gap:12px;flex-wrap:wrap}.state-btn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:white;padding:11px 22px;border-radius:999px;cursor:pointer;font-weight:bold;font-size:14px}.state-btn.active{background:white;color:#1d4ed8}.container{padding:24px}.loading{background:#fff7ed;color:#9a3412;padding:14px;border-radius:12px;margin-bottom:20px;font-weight:bold;border:1px solid #fed7aa;display:none;text-align:center}.database-panel,.tracker-panel{background:white;padding:20px;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.08);margin-bottom:26px;border:1px solid #dbeafe}.database-panel h2,.tracker-panel h2,.panel h2,.box h2{margin:0 0 16px;font-size:22px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:10px;text-align:center}.database-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;align-items:stretch;justify-content:center}.database-unit-block{background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;min-width:0}.database-unit-title{text-align:center;font-weight:900;color:#0f172a;margin-bottom:12px;font-size:14px;text-transform:uppercase;letter-spacing:.4px}.database-unit-block{text-align:center}.database-unit-metrics{justify-items:center}.database-unit-metrics .card{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}.database-unit-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.district-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.database-unit-metrics .card{padding:14px 8px;background:white}.kpi-grid,.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-bottom:26px;width:100%}.panel,.box{background:white;padding:20px;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.08);min-width:0;max-width:100%;overflow:hidden}.box{margin-bottom:26px}.today-panel{background:linear-gradient(180deg,#ecfdf5,#ffffff);border:1px solid #bbf7d0}.today-panel h2{color:#166534;border-bottom:1px solid #bbf7d0}.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;width:100%}.card{background:#f8fafc;border-radius:16px;padding:18px 12px;border-left:5px solid #1d4ed8;text-align:center;min-width:0}.today-panel .card{background:#f0fdf4}.card h3{margin:0;font-size:clamp(24px,2.4vw,34px);color:#1d4ed8;text-align:center;line-height:1.1}.database-unit-metrics .card h3{font-size:clamp(22px,2vw,30px)}.card p{margin:8px 0 0;font-weight:bold;color:#475569;font-size:12px;text-align:center;line-height:1.25;word-break:break-word}.blue{border-left-color:#1d4ed8}.blue h3{color:#1d4ed8}.green{border-left-color:#16a34a}.green h3{color:#16a34a}.orange{border-left-color:#ea580c}.orange h3{color:#ea580c}.purple{border-left-color:#7c3aed}.purple h3{color:#7c3aed}.red{border-left-color:#dc2626}.red h3{color:#dc2626}.gray{border-left-color:#4b5563}.gray h3{color:#4b5563}.town-showcase{grid-column:1/-1;width:100%;margin:0;background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;box-shadow:none}.town-showcase .database-unit-title{text-align:left;padding-left:4px}.town-master-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}.town-master-card{background:white;border-radius:14px;padding:14px 12px;text-align:left;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(15,23,42,.06)}.town-master-card h3{margin:0;font-size:clamp(28px,3vw,42px);line-height:1;color:#1d4ed8;font-weight:900}.town-master-card p{margin:8px 0 0;font-size:12px;font-weight:900;color:#475569;text-transform:uppercase;letter-spacing:.4px}.town-type-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.town-type-box{background:white;border:1px solid #dbeafe;border-radius:16px;padding:14px 12px;text-align:left;min-width:0;box-shadow:0 2px 10px rgba(15,23,42,.08);position:relative;overflow:hidden}.town-type-box:before{content:"";position:absolute;left:0;top:0;width:100%;height:5px;background:#1d4ed8}.town-type-box.dhq:before{background:#7c3aed}.town-type-box.p1:before{background:#ea580c}.town-type-box.p2:before{background:#16a34a}.town-type-box h4{margin:4px 0 12px;font-size:15px;color:#0f172a;font-weight:900;text-transform:uppercase;letter-spacing:.4px;text-align:left}.town-type-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.town-type-metric,.town-operation-metric{background:#f8fafc;border-radius:12px;padding:10px 8px;border:1px solid #e2e8f0;text-align:left}.town-type-metric b{display:block;font-size:22px;line-height:1.1;color:#1d4ed8;font-weight:900}.town-type-metric span,.town-operation-metric span{display:block;margin-top:5px;font-size:10px;font-weight:900;color:#64748b;line-height:1.1;text-transform:uppercase}.town-operation-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed #cbd5e1}.town-operation-metric{background:linear-gradient(180deg,#ffffff,#f8fafc)}.town-operation-metric b{display:block;font-size:20px;line-height:1.1;color:#0f172a;font-weight:900}.town-operation-metric.conversion b{color:#16a34a}.detail-toggle-wrap{display:flex;justify-content:center;margin-top:18px}.detail-toggle-btn{border:none;padding:11px 24px;border-radius:999px;cursor:pointer;font-weight:bold;background:#0f172a;color:white;box-shadow:0 3px 10px rgba(0,0,0,.15)}.detail-toggle-btn:hover{background:#1d4ed8}.database-detail-box{display:none;margin-top:18px;border-top:1px solid #e5e7eb;padding-top:18px}.database-detail-box h3{margin:0 0 14px;text-align:center;font-size:18px;color:#111827}.table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:auto;border-radius:12px;border:1px solid #e5e7eb;max-height:680px}table{width:100%;border-collapse:collapse;background:white}.party-table{min-width:1850px;table-layout:auto}.summary-table,.database-detail-table{min-width:100%;width:100%;table-layout:fixed}.summary-table th,.summary-table td,.database-detail-table th,.database-detail-table td,.hierarchy-table th,.hierarchy-table td{padding:10px 8px;font-size:12px;white-space:normal;word-break:break-word;overflow-wrap:anywhere;line-height:1.25}.hierarchy-table{min-width:1120px;width:100%;table-layout:fixed}th{background:#1e40af;color:white;padding:13px;text-align:center;font-size:13px;position:sticky;top:0;z-index:2}.today-panel th{background:#15803d}td{padding:12px;border-bottom:1px solid #e5e7eb;font-size:13px;vertical-align:middle;text-align:center}tr:hover{background:#f8fafc}.summary-row{font-weight:bold;background:#f1f5f9}.badge{padding:6px 11px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;white-space:nowrap}.badge-open{background:#ffedd5;color:#9a3412}.badge-ready{background:#dcfce7;color:#166534}.badge-closed{background:#fee2e2;color:#991b1b}.badge-doesnt{background:#e5e7eb;color:#374151}.badge-new{background:#dbeafe;color:#1e40af}.badge-existing{background:#f3e8ff;color:#6b21a8}.badge-no{background:#fef3c7;color:#92400e}.activation-date-box{display:inline-block;padding:8px 12px;border-radius:12px;background:#dcfce7;color:#14532d;border:1px solid #86efac;font-weight:800;min-width:120px}.activation-date-empty{display:inline-block;padding:8px 12px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;font-weight:700;min-width:120px}.party-name{font-weight:bold;color:#111827;min-width:180px;text-align:center}.photo{width:230px;height:170px;object-fit:cover;border-radius:14px;border:1px solid #cbd5e1;cursor:pointer;background:#f1f5f9;box-shadow:0 3px 10px rgba(0,0,0,.18)}.photo:hover{transform:scale(1.04);transition:.2s}.no-photo{color:#94a3b8;font-size:12px;font-weight:bold}.filter-row{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;justify-content:center;align-items:center}.sales-team-select{min-width:240px;padding:10px 14px;border-radius:999px;border:1px solid #cbd5e1;background:white;color:#1f2937;font-weight:bold;outline:none;cursor:pointer}.filter-label{font-size:13px;font-weight:bold;color:#374151}.filter-btn{border:none;padding:10px 18px;border-radius:999px;cursor:pointer;font-weight:bold;background:#e5e7eb;color:#374151}.filter-btn.active{background:#1d4ed8;color:white}.filter-btn.open.active{background:#ea580c}.filter-btn.closed.active{background:#dc2626}.filter-btn.ready.active{background:#16a34a}.filter-btn.today.active{background:#15803d}.filter-btn.doesnt.active{background:#4b5563}#map{width:100%;height:520px;border-radius:16px;border:1px solid #cbd5e1;overflow:hidden}.map-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;font-weight:bold;color:#374151;justify-content:center}.legend-item{display:flex;align-items:center;gap:7px}.dot{width:14px;height:14px;border-radius:50%;display:inline-block}.dot-green{background:#16a34a}.dot-green-check{background:#16a34a;color:white;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;line-height:1}.dot-red{background:#dc2626}.dot-gray{background:#4b5563}.map-marker{width:18px;height:18px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4)}.marker-open{background:#16a34a}.marker-ready{background:#16a34a;color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;line-height:1}.marker-ready:before{content:"✓"}.marker-closed{background:#dc2626}.marker-doesnt{background:#4b5563}.popup-title{font-weight:bold;font-size:14px;margin-bottom:5px;text-align:center}.modal{display:none;position:fixed;z-index:99;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.82);justify-content:center;align-items:center;padding:20px}.modal img{max-width:94%;max-height:90%;border-radius:14px;background:white;padding:5px}.close{position:absolute;right:30px;top:18px;color:white;font-size:40px;font-weight:bold;cursor:pointer}.tracker-note{text-align:center;color:#64748b;font-size:12px;font-weight:bold;margin:0 0 14px}.tracker-chart-wrap{width:100%;height:430px;position:relative;padding-top:0}.tracker-empty{text-align:center;color:#64748b;font-weight:bold;padding:45px 10px;display:none;border:1px dashed #cbd5e1;border-radius:16px;background:#f8fafc}.level-district td{background:#eff6ff;font-weight:900;border-top:2px solid #bfdbfe}.level-tehsil td{background:#f8fafc;font-weight:800}.level-town td{background:#fff}.hierarchy-name{text-align:left}.indent-0{padding-left:10px!important}.indent-1{padding-left:34px!important}.indent-2{padding-left:62px!important}.unit-pill{display:inline-block;min-width:70px;padding:4px 9px;border-radius:999px;font-weight:900;font-size:11px;text-align:center;margin-right:8px;color:white}.unit-district{background:#1d4ed8}.unit-tehsil{background:#7c3aed}.unit-town{background:#4b5563}@media(max-width:1200px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.container{padding:20px}}@media(max-width:1050px){.kpi-grid,.summary-grid{grid-template-columns:minmax(0,1fr)}.town-operation-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:800px){.cards,.database-cards,.town-master-metrics,.town-type-breakdown,.town-operation-metrics{grid-template-columns:1fr}.district-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.top-download-btn{position:static;display:block;margin:0 0 10px 0;width:fit-content}.daily-report-btn{top:auto;right:auto}.brand-row{align-items:flex-start;flex-direction:column}.logo{height:48px}.header h1{font-size:24px}.container{padding:16px}#map{height:430px}}
+    *{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{font-family:Arial,sans-serif;background:#eef2f7;margin:0;color:#1f2937}.header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;padding:24px 270px 24px 30px;border-bottom-left-radius:30px;border-bottom-right-radius:30px;box-shadow:0 6px 22px rgba(0,0,0,.22);position:relative}.top-download-btn{position:absolute;top:24px;right:30px;border:none;padding:12px 22px;border-radius:999px;cursor:pointer;font-weight:bold;background:white;color:#1d4ed8;box-shadow:0 4px 14px rgba(0,0,0,.22);z-index:5}.top-download-btn:hover{background:#f1f5f9}.daily-report-btn{top:74px;right:30px;background:#dcfce7;color:#166534}.daily-report-btn:hover{background:#bbf7d0}.all-state-report-btn{top:124px;right:30px;background:#e0f2fe;color:#075985}.all-state-report-btn:hover{background:#bae6fd}.top-download-btn:disabled{opacity:.65;cursor:not-allowed}.brand-row{display:flex;align-items:center;gap:18px;margin-bottom:18px}.logo{height:58px;width:auto;object-fit:contain;background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;display:block}.header h1{margin:0;font-size:32px;font-weight:800;letter-spacing:.3px}.state-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.state-label{font-weight:bold;font-size:15px;color:white;opacity:.95}.state-buttons{display:flex;gap:12px;flex-wrap:wrap}.state-btn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:white;padding:11px 22px;border-radius:999px;cursor:pointer;font-weight:bold;font-size:14px}.state-btn.active{background:white;color:#1d4ed8}.container{padding:24px}.loading{background:#fff7ed;color:#9a3412;padding:14px;border-radius:12px;margin-bottom:20px;font-weight:bold;border:1px solid #fed7aa;display:none;text-align:center}.database-panel,.tracker-panel{background:white;padding:20px;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.08);margin-bottom:26px;border:1px solid #dbeafe}.database-panel h2,.tracker-panel h2,.panel h2,.box h2{margin:0 0 16px;font-size:22px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:10px;text-align:center}.database-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;align-items:stretch;justify-content:center}.database-unit-block{background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;min-width:0}.database-unit-title{text-align:center;font-weight:900;color:#0f172a;margin-bottom:12px;font-size:14px;text-transform:uppercase;letter-spacing:.4px}.database-unit-block{text-align:center}.database-unit-metrics{justify-items:center}.database-unit-metrics .card{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}.database-unit-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.district-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.database-unit-metrics .card{padding:14px 8px;background:white}.kpi-grid,.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-bottom:26px;width:100%}.panel,.box{background:white;padding:20px;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.08);min-width:0;max-width:100%;overflow:hidden}.box{margin-bottom:26px}.today-panel{background:linear-gradient(180deg,#ecfdf5,#ffffff);border:1px solid #bbf7d0}.today-panel h2{color:#166534;border-bottom:1px solid #bbf7d0}.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;width:100%}.card{background:#f8fafc;border-radius:16px;padding:18px 12px;border-left:5px solid #1d4ed8;text-align:center;min-width:0}.today-panel .card{background:#f0fdf4}.card h3{margin:0;font-size:clamp(24px,2.4vw,34px);color:#1d4ed8;text-align:center;line-height:1.1}.database-unit-metrics .card h3{font-size:clamp(22px,2vw,30px)}.card p{margin:8px 0 0;font-weight:bold;color:#475569;font-size:12px;text-align:center;line-height:1.25;word-break:break-word}.blue{border-left-color:#1d4ed8}.blue h3{color:#1d4ed8}.green{border-left-color:#16a34a}.green h3{color:#16a34a}.orange{border-left-color:#ea580c}.orange h3{color:#ea580c}.purple{border-left-color:#7c3aed}.purple h3{color:#7c3aed}.red{border-left-color:#dc2626}.red h3{color:#dc2626}.gray{border-left-color:#4b5563}.gray h3{color:#4b5563}.town-showcase{grid-column:1/-1;width:100%;margin:0;background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;box-shadow:none}.town-showcase .database-unit-title{text-align:left;padding-left:4px}.town-master-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}.town-master-card{background:white;border-radius:14px;padding:14px 12px;text-align:left;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(15,23,42,.06)}.town-master-card h3{margin:0;font-size:clamp(28px,3vw,42px);line-height:1;color:#1d4ed8;font-weight:900}.town-master-card p{margin:8px 0 0;font-size:12px;font-weight:900;color:#475569;text-transform:uppercase;letter-spacing:.4px}.town-type-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}.town-type-box{background:white;border:1px solid #dbeafe;border-radius:16px;padding:14px 12px;text-align:left;min-width:0;box-shadow:0 2px 10px rgba(15,23,42,.08);position:relative;overflow:hidden}.town-type-box:before{content:"";position:absolute;left:0;top:0;width:100%;height:5px;background:#1d4ed8}.town-type-box.dhq:before{background:#7c3aed}.town-type-box.p1:before{background:#ea580c}.town-type-box.p2:before{background:#16a34a}.town-type-box h4{margin:4px 0 12px;font-size:15px;color:#0f172a;font-weight:900;text-transform:uppercase;letter-spacing:.4px;text-align:left}.town-type-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.town-type-metric,.town-operation-metric{background:#f8fafc;border-radius:12px;padding:10px 8px;border:1px solid #e2e8f0;text-align:left}.town-type-metric b{display:block;font-size:22px;line-height:1.1;color:#1d4ed8;font-weight:900}.town-type-metric span,.town-operation-metric span{display:block;margin-top:5px;font-size:10px;font-weight:900;color:#64748b;line-height:1.1;text-transform:uppercase}.town-operation-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed #cbd5e1}.town-operation-metric{background:linear-gradient(180deg,#ffffff,#f8fafc)}.town-operation-metric b{display:block;font-size:20px;line-height:1.1;color:#0f172a;font-weight:900}.town-operation-metric.conversion b{color:#16a34a}.detail-toggle-wrap{display:flex;justify-content:center;margin-top:18px}.detail-toggle-btn{border:none;padding:11px 24px;border-radius:999px;cursor:pointer;font-weight:bold;background:#0f172a;color:white;box-shadow:0 3px 10px rgba(0,0,0,.15)}.detail-toggle-btn:hover{background:#1d4ed8}.database-detail-box{display:none;margin-top:18px;border-top:1px solid #e5e7eb;padding-top:18px}.database-detail-box h3{margin:0 0 14px;text-align:center;font-size:18px;color:#111827}.table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:auto;border-radius:12px;border:1px solid #e5e7eb;max-height:680px}table{width:100%;border-collapse:collapse;background:white}.party-table{min-width:1850px;table-layout:auto}.summary-table,.database-detail-table{min-width:100%;width:100%;table-layout:fixed}.summary-table th,.summary-table td,.database-detail-table th,.database-detail-table td,.hierarchy-table th,.hierarchy-table td{padding:10px 8px;font-size:12px;white-space:normal;word-break:break-word;overflow-wrap:anywhere;line-height:1.25}.hierarchy-table{min-width:1120px;width:100%;table-layout:fixed}th{background:#1e40af;color:white;padding:13px;text-align:center;font-size:13px;position:sticky;top:0;z-index:2}.today-panel th{background:#15803d}td{padding:12px;border-bottom:1px solid #e5e7eb;font-size:13px;vertical-align:middle;text-align:center}tr:hover{background:#f8fafc}.summary-row{font-weight:bold;background:#f1f5f9}.badge{padding:6px 11px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;white-space:nowrap}.badge-open{background:#ffedd5;color:#9a3412}.badge-ready{background:#dcfce7;color:#166534}.badge-closed{background:#fee2e2;color:#991b1b}.badge-doesnt{background:#e5e7eb;color:#374151}.badge-new{background:#dbeafe;color:#1e40af}.badge-existing{background:#f3e8ff;color:#6b21a8}.badge-no{background:#fef3c7;color:#92400e}.activation-date-box{display:inline-block;padding:8px 12px;border-radius:12px;background:#dcfce7;color:#14532d;border:1px solid #86efac;font-weight:800;min-width:120px}.activation-date-empty{display:inline-block;padding:8px 12px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;font-weight:700;min-width:120px}.party-name{font-weight:bold;color:#111827;min-width:180px;text-align:center}.photo{width:230px;height:170px;object-fit:cover;border-radius:14px;border:1px solid #cbd5e1;cursor:pointer;background:#f1f5f9;box-shadow:0 3px 10px rgba(0,0,0,.18)}.photo:hover{transform:scale(1.04);transition:.2s}.no-photo{color:#94a3b8;font-size:12px;font-weight:bold}.filter-row{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;justify-content:center;align-items:center}.sales-team-select{min-width:240px;padding:10px 14px;border-radius:999px;border:1px solid #cbd5e1;background:white;color:#1f2937;font-weight:bold;outline:none;cursor:pointer}.filter-label{font-size:13px;font-weight:bold;color:#374151}.filter-btn{border:none;padding:10px 18px;border-radius:999px;cursor:pointer;font-weight:bold;background:#e5e7eb;color:#374151}.filter-btn.active{background:#1d4ed8;color:white}.filter-btn.open.active{background:#ea580c}.filter-btn.closed.active{background:#dc2626}.filter-btn.ready.active{background:#16a34a}.filter-btn.today.active{background:#15803d}.filter-btn.doesnt.active{background:#4b5563}#map{width:100%;height:520px;border-radius:16px;border:1px solid #cbd5e1;overflow:hidden}.map-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;font-weight:bold;color:#374151;justify-content:center}.legend-item{display:flex;align-items:center;gap:7px}.dot{width:14px;height:14px;border-radius:50%;display:inline-block}.dot-green{background:#16a34a}.dot-green-check{background:#16a34a;color:white;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;line-height:1}.dot-red{background:#dc2626}.dot-gray{background:#4b5563}.map-marker{width:18px;height:18px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4)}.marker-open{background:#16a34a}.marker-ready{background:#16a34a;color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;line-height:1}.marker-ready:before{content:"✓"}.marker-closed{background:#dc2626}.marker-doesnt{background:#4b5563}.popup-title{font-weight:bold;font-size:14px;margin-bottom:5px;text-align:center}.modal{display:none;position:fixed;z-index:99;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.82);justify-content:center;align-items:center;padding:20px}.modal img{max-width:94%;max-height:90%;border-radius:14px;background:white;padding:5px}.close{position:absolute;right:30px;top:18px;color:white;font-size:40px;font-weight:bold;cursor:pointer}.tracker-note{text-align:center;color:#64748b;font-size:12px;font-weight:bold;margin:0 0 14px}.tracker-chart-wrap{width:100%;height:430px;position:relative;padding-top:0}.tracker-empty{text-align:center;color:#64748b;font-weight:bold;padding:45px 10px;display:none;border:1px dashed #cbd5e1;border-radius:16px;background:#f8fafc}.level-district td{background:#eff6ff;font-weight:900;border-top:2px solid #bfdbfe}.level-tehsil td{background:#f8fafc;font-weight:800}.level-town td{background:#fff}.hierarchy-name{text-align:left}.indent-0{padding-left:10px!important}.indent-1{padding-left:34px!important}.indent-2{padding-left:62px!important}.unit-pill{display:inline-block;min-width:70px;padding:4px 9px;border-radius:999px;font-weight:900;font-size:11px;text-align:center;margin-right:8px;color:white}.unit-district{background:#1d4ed8}.unit-tehsil{background:#7c3aed}.unit-town{background:#4b5563}@media(max-width:1200px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.container{padding:20px}}@media(max-width:1050px){.kpi-grid,.summary-grid{grid-template-columns:minmax(0,1fr)}.town-operation-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:800px){.cards,.database-cards,.town-master-metrics,.town-type-breakdown,.town-operation-metrics{grid-template-columns:1fr}.district-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.header{padding:24px 30px}.top-download-btn{position:static;display:block;margin:0 0 10px 0;width:fit-content}.daily-report-btn{top:auto;right:auto}.brand-row{align-items:flex-start;flex-direction:column}.logo{height:48px}.header h1{font-size:24px}.container{padding:16px}#map{height:430px}}
   
 .header-tab-btn{border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.16);color:white;padding:11px 18px;border-radius:999px;cursor:pointer;font-weight:900;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.16);white-space:nowrap}.header-tab-btn:hover{background:white;color:#1d4ed8}.header-tab-btn.secondary{background:white;color:#1d4ed8}.view-panel{display:block}.view-panel.hidden{display:none}.town-tracker-table{min-width:1350px;table-layout:auto}.town-status-card{border-left-width:6px}.town-tracker-map{width:100%;height:540px;border-radius:16px;border:1px solid #cbd5e1;overflow:hidden}.tracker-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.tracker-filter-wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0 16px}.town-marker{width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.38)}.town-marker.notvisited{background:#94a3b8}.town-marker.onboarded{background:#16a34a}.town-marker.openonly{background:#ea580c}.town-marker.noopen{background:#dc2626}.dot-town-notvisited{background:#94a3b8}.dot-town-onboarded{background:#16a34a}.dot-town-openonly{background:#ea580c}.dot-town-noopen{background:#dc2626}@media(max-width:1000px){.tracker-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.brand-row{gap:10px}.header-tab-btn{padding:9px 13px}}@media(max-width:650px){.tracker-kpi-grid{grid-template-columns:1fr}}
 .town-type-tracker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}.town-type-tracker-block{background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;position:relative;overflow:hidden}.town-type-tracker-block:before{content:"";position:absolute;top:0;left:0;width:100%;height:5px;background:#1d4ed8}.town-type-tracker-block.dhq:before{background:#7c3aed}.town-type-tracker-block.p1:before{background:#ea580c}.town-type-tracker-block.p2:before{background:#16a34a}.town-type-tracker-block>h3{margin:4px 0 12px;text-align:center;font-size:16px;font-weight:900;color:#0f172a;letter-spacing:.4px}.town-type-tracker-block .tracker-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:0}.town-type-tracker-block .card{padding:14px 8px}.town-type-tracker-block .card h3{font-size:clamp(22px,2.1vw,30px)}@media(max-width:1100px){.town-type-tracker-grid{grid-template-columns:1fr}.town-type-tracker-block .tracker-kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:750px){.town-type-tracker-block .tracker-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:500px){.town-type-tracker-block .tracker-kpi-grid{grid-template-columns:1fr}}
@@ -17,6 +17,7 @@
 <div class="header">
   <button class="top-download-btn" onclick="downloadExcelDump()">Download Excel Dump</button>
   <button class="top-download-btn daily-report-btn" onclick="downloadDailyReport()">Generate Daily Report</button>
+  <button class="top-download-btn all-state-report-btn" onclick="downloadAllStateReport()">All State Report</button>
   <div class="brand-row"><img class="logo" src="https://i.ibb.co/BVZkzhG3/image.png" alt="Logo"><h1>Party Onboarding Project</h1><button class="header-tab-btn" id="townTrackerTabBtn" onclick="showTownTrackerView()">Town Onboarding Tracker</button><button class="header-tab-btn secondary" id="mainDashboardTabBtn" onclick="showMainDashboardView()" style="display:none;">Main Dashboard</button></div>
   <div class="state-row"><div class="state-label">Select State:</div><div class="state-buttons"><button class="state-btn active" id="btnALL" onclick="changeSheet('ALL')">ALL</button><button class="state-btn" id="btnUP" onclick="changeSheet('UP')">Uttar Pradesh</button><button class="state-btn" id="btnMP" onclick="changeSheet('MP')">Madhya Pradesh</button><button class="state-btn" id="btnMAH" onclick="changeSheet('MAH')">Maharashtra</button><button class="state-btn" id="btnRJ" onclick="changeSheet('RJ')">Rajasthan</button><button class="state-btn" id="btnBR" onclick="changeSheet('BR')">Bihar</button></div></div>
 </div>
@@ -123,6 +124,7 @@ const SHEET_ID="1jJta6wOibBHmrqmWQeq-BgYixVUoC1U1ZvX9SxyO8Oo";
 const SHEETS={UP:{name:"Uttar Pradesh",gid:"0",newGid:"3567716",requestedDistricts:41},MP:{name:"Madhya Pradesh",gid:"1101100608",newGid:"807944300",requestedDistricts:32},MAH:{name:"Maharashtra",gid:"1763207454",newGid:"529885309",requestedDistricts:21},RJ:{name:"Rajasthan",gid:"1667798762",newGid:"1378700901",requestedDistricts:null},BR:{name:"Bihar",gid:"2138353711",newGid:"525744938",requestedDistricts:null}};
 const ALL_SHEET_KEYS=["UP","MP","MAH","RJ","BR"];
 let currentSheet="ALL",rawData=[],databaseData=[],submittedData=[],partyFilter="all",mapFilter="all",selectedSalesTeam="all",databaseDetailVisible=false,map,mapMarkers=[],currentScript=null,dateTrackerChart=null,townMap=null,townMapMarkers=[],townTrackerFilter="all",isAllLoading=false,loadJobs=[],loadJobIndex=0,activeLoadingSheetKey="ALL",activeLoadingPartySource="Existing";
+let allStateReportJobs=[],allStateReportRows=[],allStateReportJobIndex=0,activeAllStateReportJob=null,allStateReportCurrentScript=null;
 window.onload=()=>loadSheet("ALL");
 function changeSheet(sheetKey){currentSheet=sheetKey;document.querySelectorAll(".state-btn").forEach(el=>el.classList.remove("active"));const activeBtn=document.getElementById("btn"+sheetKey);if(activeBtn)activeBtn.classList.add("active");partyFilter="all";mapFilter="all";selectedSalesTeam="all";databaseDetailVisible=false;resetFilterButtons();loadSheet(sheetKey)}
 function loadSheet(sheetKey){rawData=[];databaseData=[];submittedData=[];clearDashboard();clearMapMarkers();document.getElementById("loading").style.display="block";if(currentScript)currentScript.remove();loadJobs=[];loadJobIndex=0;if(sheetKey==="ALL"){ALL_SHEET_KEYS.forEach(key=>{loadJobs.push({sheetKey:key,gid:SHEETS[key].gid,partySource:"Existing"});loadJobs.push({sheetKey:key,gid:SHEETS[key].newGid,partySource:"New"})});document.getElementById("loading").innerHTML="Loading ALL states data including New parties..."}else{loadJobs=[{sheetKey:sheetKey,gid:SHEETS[sheetKey].gid,partySource:"Existing"},{sheetKey:sheetKey,gid:SHEETS[sheetKey].newGid,partySource:"New"}];document.getElementById("loading").innerHTML="Loading "+SHEETS[sheetKey].name+" data including New parties..."}loadNextJob()}
@@ -181,12 +183,12 @@ function getPType(row){
   const type=normalizeVillageType(row.villageType);
   return type==="P1"||type==="P2"?type:null;
 }
-function buildDailyReportMetrics(){
+function buildDailyReportMetricsFromData(databaseRows,submittedRows){
   const townUniverse={P1:new Set(),P2:new Set()};
   const townAuditStatus={P1:{started:0,completed:0,visited:0},P2:{started:0,completed:0,visited:0}};
   const townGroups={};
 
-  databaseData.forEach(row=>{
+  databaseRows.forEach(row=>{
     const type=getPType(row);
     if(!type)return;
     const key=getTownUniqueKey(row);
@@ -205,7 +207,12 @@ function buildDailyReportMetrics(){
     townAuditStatus[type].visited=townAuditStatus[type].started+townAuditStatus[type].completed;
   });
 
-  const todayRows=getTodayData();
+  const today=new Date();
+  const todayRows=submittedRows.filter(row=>{
+    const d=getDateCorrectValue(row);
+    return d&&d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();
+  });
+
   function calc(rows){
     const out={
       P1:{towns:new Set(),partnersVerified:0,open:0,converted:0,convertedExisting:0,convertedNew:0},
@@ -225,20 +232,19 @@ function buildDailyReportMetrics(){
     });
     return out;
   }
-  const tillNow=calc(submittedData);
-  const today=calc(todayRows);
-  return {townUniverse,townAuditStatus,tillNow,today};
+
+  const tillNow=calc(submittedRows);
+  const todaySummary=calc(todayRows);
+  return {townUniverse,townAuditStatus,tillNow,today:todaySummary};
 }
-function downloadDailyReport(){
-  const report=buildDailyReportMetrics();
-  const stateName=currentSheet==="ALL"?"ALL":SHEETS[currentSheet].name;
-  const generatedAt=new Date();
-  const dateText=generatedAt.toLocaleDateString("en-IN");
-  const timeText=generatedAt.toLocaleTimeString("en-IN");
+function buildDailyReportMetrics(){
+  return buildDailyReportMetricsFromData(databaseData,submittedData);
+}
+function getDailyReportRows(report){
   const totalP1=report.townUniverse.P1.size;
   const totalP2=report.townUniverse.P2.size;
   function pct(num,den){return den?((num/den)*100).toFixed(2)+"%":"0.00%";}
-  const rows=[
+  return [
     ["Total Count",totalP1,totalP2,"P1","P2"],
     ["Visit",report.townAuditStatus.P1.visited,report.townAuditStatus.P2.visited,report.today.P1.towns.size,report.today.P2.towns.size],
     ["Partners Visited",report.tillNow.P1.partnersVerified,report.tillNow.P2.partnersVerified,report.today.P1.partnersVerified,report.today.P2.partnersVerified],
@@ -249,6 +255,14 @@ function downloadDailyReport(){
     ["% of Total Visit",pct(report.townAuditStatus.P1.visited,totalP1),pct(report.townAuditStatus.P2.visited,totalP2),"-","-"],
     ["% Conversion from Open List",pct(report.tillNow.P1.converted,report.tillNow.P1.open),pct(report.tillNow.P2.converted,report.tillNow.P2.open),pct(report.today.P1.converted,report.today.P1.open),pct(report.today.P2.converted,report.today.P2.open)]
   ];
+}
+function downloadDailyReport(){
+  const report=buildDailyReportMetrics();
+  const stateName=currentSheet==="ALL"?"ALL":SHEETS[currentSheet].name;
+  const generatedAt=new Date();
+  const dateText=generatedAt.toLocaleDateString("en-IN");
+  const timeText=generatedAt.toLocaleTimeString("en-IN");
+  const rows=getDailyReportRows(report);
   let table="<table border='1'><thead><tr><th>Metric</th><th>P1</th><th>P2</th><th colspan='2'>Today</th></tr></thead><tbody>";
   rows.forEach((r,i)=>{
     table+="<tr>";
@@ -269,6 +283,127 @@ function downloadDailyReport(){
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+function downloadAllStateReport(){
+  const btn=document.querySelector(".all-state-report-btn");
+  if(btn){btn.disabled=true;btn.innerText="Generating...";}
+  const loading=document.getElementById("loading");
+  if(loading){loading.style.display="block";loading.innerHTML="Generating All State Report: loading all state sheets...";}
+  allStateReportRows=[];
+  allStateReportJobs=[];
+  allStateReportJobIndex=0;
+  ALL_SHEET_KEYS.forEach(key=>{
+    allStateReportJobs.push({sheetKey:key,gid:SHEETS[key].gid,partySource:"Existing"});
+    allStateReportJobs.push({sheetKey:key,gid:SHEETS[key].newGid,partySource:"New"});
+  });
+  loadNextAllStateReportJob();
+}
+function loadNextAllStateReportJob(){
+  if(allStateReportJobIndex>=allStateReportJobs.length){
+    finishAllStateReportDownload();
+    return;
+  }
+  const job=allStateReportJobs[allStateReportJobIndex];
+  activeAllStateReportJob=job;
+  const loading=document.getElementById("loading");
+  if(loading){loading.style.display="block";loading.innerHTML="Generating All State Report: loading "+SHEETS[job.sheetKey].name+" - "+job.partySource+" parties...";}
+  if(allStateReportCurrentScript)allStateReportCurrentScript.remove();
+  const url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?gid="+job.gid+"&tqx=responseHandler:handleAllStateReportData&cacheBust="+Date.now();
+  allStateReportCurrentScript=document.createElement("script");
+  allStateReportCurrentScript.src=url;
+  allStateReportCurrentScript.onerror=function(){
+    console.warn("All state report load failed",job);
+    allStateReportJobIndex++;
+    loadNextAllStateReportJob();
+  };
+  document.body.appendChild(allStateReportCurrentScript);
+}
+function handleAllStateReportData(response){
+  try{
+    const job=activeAllStateReportJob;
+    const parsedRows=parseSheetResponse(response,job.sheetKey,job.partySource);
+    allStateReportRows=allStateReportRows.concat(parsedRows);
+  }catch(error){
+    console.error("All state report parsing failed",error,activeAllStateReportJob);
+  }
+  allStateReportJobIndex++;
+  loadNextAllStateReportJob();
+}
+function finishAllStateReportDownload(){
+  const loading=document.getElementById("loading");
+  const btn=document.querySelector(".all-state-report-btn");
+  try{
+    const generatedAt=new Date();
+    const dateText=generatedAt.toLocaleDateString("en-IN");
+    const timeText=generatedAt.toLocaleTimeString("en-IN");
+    const workbook=buildAllStateWorkbookXml(allStateReportRows,dateText,timeText);
+    const blob=new Blob([workbook],{type:"application/vnd.ms-excel;charset=utf-8;"});
+    const fileName="Party_Onboarding_All_State_Report_"+dateText.replace(/\//g,"-")+".xls";
+    const link=document.createElement("a");
+    link.href=URL.createObjectURL(blob);
+    link.download=fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    if(loading){loading.style.display="none";}
+  }catch(error){
+    console.error(error);
+    if(loading){loading.style.display="block";loading.innerHTML="All State Report failed. Check browser console / sheet permission.";}
+  }finally{
+    if(btn){btn.disabled=false;btn.innerText="All State Report";}
+    if(allStateReportCurrentScript)allStateReportCurrentScript.remove();
+  }
+}
+function buildAllStateWorkbookXml(rows,dateText,timeText){
+  const databaseRows=rows.filter(row=>row.partySource!=="New"&&isDatabaseRow(row));
+  const submittedRows=rows.filter(isSubmitted);
+  const sheetsXml=ALL_SHEET_KEYS.map(key=>{
+    const stateName=SHEETS[key].name;
+    const db=databaseRows.filter(row=>row.sourceSheetKey===key);
+    const sub=submittedRows.filter(row=>row.sourceSheetKey===key);
+    const report=buildDailyReportMetricsFromData(db,sub);
+    const reportRows=getDailyReportRows(report);
+    return buildDailyWorksheetXml(stateName,reportRows,dateText,timeText);
+  }).join("");
+  return '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40"><Styles><Style ss:ID="Title"><Font ss:Bold="1" ss:Size="14"/><Interior ss:Color="#D9EAF7" ss:Pattern="Solid"/></Style><Style ss:ID="Header"><Font ss:Color="#FFFFFF" ss:Bold="1"/><Interior ss:Color="#1E40AF" ss:Pattern="Solid"/></Style><Style ss:ID="Label"><Font ss:Bold="1"/><Interior ss:Color="#F1F5F9" ss:Pattern="Solid"/></Style><Style ss:ID="Normal"><Alignment ss:Vertical="Center"/></Style></Styles>'+sheetsXml+'</Workbook>';
+}
+function buildDailyWorksheetXml(stateName,reportRows,dateText,timeText){
+  const sheetName=sanitizeSheetName(stateName);
+  let xml='<Worksheet ss:Name="'+xmlSafe(sheetName)+'"><Table><Column ss:Width="190"/><Column ss:Width="95"/><Column ss:Width="95"/><Column ss:Width="95"/><Column ss:Width="95"/>';
+  xml+=xmlRow(["Party Onboarding Daily Report - "+stateName],"Title");
+  xml+=xmlRow(["Generated Date",dateText],"Normal",["Label","Normal"]);
+  xml+=xmlRow(["Generated Time",timeText],"Normal",["Label","Normal"]);
+  xml+=xmlRow(["Scope","P1 and P2 only; DHQ excluded"],"Normal",["Label","Normal"]);
+  xml+=xmlRow([""],"Normal");
+  xml+=xmlRow(["Metric","P1","P2","Today P1","Today P2"],"Header");
+  reportRows.forEach((row,index)=>{
+    xml+=xmlRow(row,index===0?"Label":"Normal",["Label",null,null,null,null]);
+  });
+  xml+=xmlRow([""],"Normal");
+  xml+=xmlRow(["Visit Logic","Town visited = Audit Started towns + Audit Completed towns. Today visit = unique P1/P2 towns submitted today."],"Normal",["Label","Normal"]);
+  xml+=xmlRow(["Partners Visited Logic","Partner verified/submitted rows from Existing + New party data."],"Normal",["Label","Normal"]);
+  xml+='</Table></Worksheet>';
+  return xml;
+}
+function xmlRow(values,rowStyle,cellStyles){
+  let out="<Row>";
+  values.forEach((v,i)=>{
+    const style=(cellStyles&&cellStyles[i])?cellStyles[i]:rowStyle;
+    out+=xmlCell(v,style);
+  });
+  out+="</Row>";
+  return out;
+}
+function xmlCell(value,style){
+  const isNumber=typeof value==="number"&&isFinite(value);
+  const styleText=style?' ss:StyleID="'+style+'"':"";
+  return '<Cell'+styleText+'><Data ss:Type="'+(isNumber?"Number":"String")+'">'+xmlSafe(value)+'</Data></Cell>';
+}
+function xmlSafe(value){
+  return String(value===null||value===undefined?"":value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function sanitizeSheetName(name){
+  return String(name||"Sheet").replace(/[\\\/\?\*\[\]\:]/g," ").substring(0,31)||"Sheet";
 }
 function downloadExcelDump(){const rows=getPartyListData();if(!rows||rows.length===0){alert("No data available to download for the selected filter.");return}const stateName=currentSheet==="ALL"?"ALL":SHEETS[currentSheet].name,filterName=partyFilter==="all"?"All":partyFilter==="ready"?"Onboarded":partyFilter==="open"?"Open":partyFilter==="closed"?"Closed":"Doesnt Exist",headers=["Party Type","RTR / New Party ID","State","Party Name","Latitude","Longitude","District","Tehsil","Town","Village Type","Unique Key","Estimated Outlet Universe","Verified","Submission Time","Date Correct","Sales Team","Live Lat","Live Long","Distance from Centre","Status","Status Category","Owner Name","Phone Number","Onboarded","Estimated Activation Date","Photo Link","Remarks"];let table="<table border='1'><thead><tr>";headers.forEach(h=>table+="<th>"+excelSafe(h)+"</th>");table+="</tr></thead><tbody>";rows.forEach(row=>{const values=[getPartySourceLabel(row),row.rtr,row.state,row.party,row.latitude,row.longitude,row.district,row.tehsil,row.town,normalizeVillageType(row.villageType),getTownUniqueKey(row),row.estimatedOutletUniverse,row.verified,row.submissionTime,row.dateCorrect,row.sde,row.liveLat,row.liveLong,row.distance,row.status,getStatusLabel(row),row.owner,row.phone,isReady(row)?"Yes":"No",row.estimatedActivationDate,row.photo,row.remarks];table+="<tr>";values.forEach((v,i)=>{const cleaned=excelSafe(display(v,""));table+=headers[i]==="Photo Link"&&cleaned?"<td><a href='"+cleaned+"'>"+cleaned+"</a></td>":"<td>"+cleaned+"</td>"});table+="</tr>"});table+="</tbody></table>";const html="<html><head><meta charset='UTF-8'></head><body><h2>Party Onboarding Project - "+excelSafe(stateName)+" - "+excelSafe(filterName)+"</h2>"+table+"</body></html>",blob=new Blob([html],{type:"application/vnd.ms-excel;charset=utf-8;"}),fileName="Party_Onboarding_"+stateName.replace(/\s+/g,"_")+"_"+filterName.replace(/\s+/g,"_")+"_Dump.xls",link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=fileName;document.body.appendChild(link);link.click();document.body.removeChild(link)}
 
