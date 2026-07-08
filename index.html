@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
   <style>
     *{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{font-family:Arial,sans-serif;background:#eef2f7;margin:0;color:#1f2937}.header{background:linear-gradient(135deg,#0f172a,#1d4ed8);color:white;padding:24px 270px 24px 30px;border-bottom-left-radius:30px;border-bottom-right-radius:30px;box-shadow:0 6px 22px rgba(0,0,0,.22);position:relative}.top-download-btn{position:absolute;right:30px;border:none;padding:12px 22px;border-radius:999px;cursor:pointer;font-weight:bold;background:white;color:#1d4ed8;box-shadow:0 4px 14px rgba(0,0,0,.22);z-index:5}.top-download-btn:hover{background:#f1f5f9}.top-download-btn:disabled{opacity:.65;cursor:not-allowed}.dump-btn{top:24px}.daily-report-btn{top:74px;background:#dcfce7;color:#166534}.all-state-report-btn{top:124px;background:#e0f2fe;color:#075985}.brand-row{display:flex;align-items:center;gap:18px;margin-bottom:18px;flex-wrap:wrap}.logo{height:58px;width:auto;object-fit:contain}.header h1{margin:0;font-size:32px;font-weight:800}.header-tab-btn{border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.16);color:white;padding:11px 18px;border-radius:999px;cursor:pointer;font-weight:900;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.16);white-space:nowrap}.header-tab-btn:hover,.header-tab-btn.secondary{background:white;color:#1d4ed8}.state-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.state-label{font-weight:bold;font-size:15px;color:white}.state-buttons{display:flex;gap:12px;flex-wrap:wrap}.state-btn{border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.15);color:white;padding:11px 22px;border-radius:999px;cursor:pointer;font-weight:bold;font-size:14px}.state-btn.active{background:white;color:#1d4ed8}.container{padding:24px}.loading{background:#fff7ed;color:#9a3412;padding:14px;border-radius:12px;margin-bottom:20px;font-weight:bold;border:1px solid #fed7aa;display:none;text-align:center}.view-panel{display:block}.view-panel.hidden{display:none}.database-panel,.tracker-panel,.panel,.box{background:white;padding:20px;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.08);margin-bottom:26px;border:1px solid #dbeafe;min-width:0;max-width:100%;overflow:hidden}.database-panel h2,.tracker-panel h2,.panel h2,.box h2{margin:0 0 16px;font-size:22px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:10px;text-align:center}.today-panel{background:linear-gradient(180deg,#ecfdf5,#ffffff);border:1px solid #bbf7d0}.today-panel h2{color:#166534;border-bottom:1px solid #bbf7d0}.database-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;align-items:stretch;justify-content:center}.database-unit-block{background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;text-align:center;min-width:0}.database-unit-title{text-align:center;font-weight:900;color:#0f172a;margin-bottom:12px;font-size:14px;text-transform:uppercase;letter-spacing:.4px}.database-unit-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;justify-items:center}.district-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.kpi-grid,.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-bottom:26px;width:100%}.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;width:100%}.card{background:#f8fafc;border-radius:16px;padding:18px 12px;border-left:5px solid #1d4ed8;text-align:center;min-width:0}.today-panel .card{background:#f0fdf4}.card h3{margin:0;font-size:clamp(24px,2.4vw,34px);color:#1d4ed8;text-align:center;line-height:1.1}.card p{margin:8px 0 0;font-weight:bold;color:#475569;font-size:12px;text-align:center;line-height:1.25;word-break:break-word}.blue{border-left-color:#1d4ed8}.blue h3{color:#1d4ed8}.green{border-left-color:#16a34a}.green h3{color:#16a34a}.orange{border-left-color:#ea580c}.orange h3{color:#ea580c}.purple{border-left-color:#7c3aed}.purple h3{color:#7c3aed}.red{border-left-color:#dc2626}.red h3{color:#dc2626}.gray{border-left-color:#4b5563}.gray h3{color:#4b5563}.town-showcase{grid-column:1/-1;width:100%;margin:0;background:#f8fafc;border:1px solid #dbeafe;border-radius:18px;padding:14px;box-shadow:none}.town-master-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}.town-master-card{background:white;border-radius:14px;padding:14px 12px;text-align:left;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(15,23,42,.06)}.town-master-card h3{margin:0;font-size:clamp(28px,3vw,42px);line-height:1;color:#1d4ed8;font-weight:900}.town-master-card p{margin:8px 0 0;font-size:12px;font-weight:900;color:#475569;text-transform:uppercase;letter-spacing:.4px}.town-type-breakdown,.town-type-tracker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.town-type-box,.town-type-tracker-block{background:white;border:1px solid #dbeafe;border-radius:16px;padding:14px 12px;text-align:left;min-width:0;box-shadow:0 2px 10px rgba(15,23,42,.08);position:relative;overflow:hidden}.town-type-box:before,.town-type-tracker-block:before{content:"";position:absolute;left:0;top:0;width:100%;height:5px;background:#1d4ed8}.town-type-box.dhq:before,.town-type-tracker-block.dhq:before{background:#7c3aed}.town-type-box.p1:before,.town-type-tracker-block.p1:before{background:#ea580c}.town-type-box.p2:before,.town-type-tracker-block.p2:before{background:#16a34a}.town-type-box h4,.town-type-tracker-block>h3{margin:4px 0 12px;font-size:15px;color:#0f172a;font-weight:900;text-transform:uppercase;letter-spacing:.4px;text-align:center}.town-type-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.town-type-metric,.town-operation-metric{background:#f8fafc;border-radius:12px;padding:10px 8px;border:1px solid #e2e8f0;text-align:left}.town-type-metric b{display:block;font-size:22px;line-height:1.1;color:#1d4ed8;font-weight:900}.town-type-metric span,.town-operation-metric span{display:block;margin-top:5px;font-size:10px;font-weight:900;color:#64748b;line-height:1.1;text-transform:uppercase}.town-operation-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed #cbd5e1}.town-operation-metric{background:linear-gradient(180deg,#ffffff,#f8fafc)}.town-operation-metric b{display:block;font-size:20px;line-height:1.1;color:#0f172a;font-weight:900}.town-operation-metric.conversion b{color:#16a34a}.detail-toggle-wrap{display:flex;justify-content:center;margin-top:18px}.detail-toggle-btn{border:none;padding:11px 24px;border-radius:999px;cursor:pointer;font-weight:bold;background:#0f172a;color:white;box-shadow:0 3px 10px rgba(0,0,0,.15)}.database-detail-box{display:none;margin-top:18px;border-top:1px solid #e5e7eb;padding-top:18px}.database-detail-box h3{margin:0 0 14px;text-align:center;font-size:18px;color:#111827}.table-wrap{width:100%;max-width:100%;overflow-x:auto;overflow-y:auto;border-radius:12px;border:1px solid #e5e7eb;max-height:680px}table{width:100%;border-collapse:collapse;background:white}.party-table{min-width:1850px;table-layout:auto}.summary-table,.database-detail-table{min-width:100%;width:100%;table-layout:fixed}.summary-table th,.summary-table td,.database-detail-table th,.database-detail-table td,.hierarchy-table th,.hierarchy-table td{padding:10px 8px;font-size:12px;white-space:normal;word-break:break-word;overflow-wrap:anywhere;line-height:1.25}.hierarchy-table{min-width:1120px;width:100%;table-layout:fixed}.town-tracker-table{min-width:1350px;table-layout:auto}th{background:#1e40af;color:white;padding:13px;text-align:center;font-size:13px;position:sticky;top:0;z-index:2}.today-panel th{background:#15803d}td{padding:12px;border-bottom:1px solid #e5e7eb;font-size:13px;vertical-align:middle;text-align:center}tr:hover{background:#f8fafc}.summary-row{font-weight:bold;background:#f1f5f9}.badge{padding:6px 11px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;white-space:nowrap}.badge-open{background:#ffedd5;color:#9a3412}.badge-ready{background:#dcfce7;color:#166534}.badge-closed{background:#fee2e2;color:#991b1b}.badge-doesnt{background:#e5e7eb;color:#374151}.badge-new{background:#dbeafe;color:#1e40af}.badge-existing{background:#f3e8ff;color:#6b21a8}.badge-no{background:#fef3c7;color:#92400e}.activation-date-box{display:inline-block;padding:8px 12px;border-radius:12px;background:#dcfce7;color:#14532d;border:1px solid #86efac;font-weight:800;min-width:120px}.activation-date-empty{display:inline-block;padding:8px 12px;border-radius:12px;background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;font-weight:700;min-width:120px}.party-name{font-weight:bold;color:#111827;min-width:180px;text-align:center}.photo{width:230px;height:170px;object-fit:cover;border-radius:14px;border:1px solid #cbd5e1;cursor:pointer;background:#f1f5f9;box-shadow:0 3px 10px rgba(0,0,0,.18)}.photo:hover{transform:scale(1.04);transition:.2s}.no-photo{color:#94a3b8;font-size:12px;font-weight:bold}.filter-row,.tracker-filter-wrap{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;justify-content:center;align-items:center}.sales-team-select{min-width:240px;padding:10px 14px;border-radius:999px;border:1px solid #cbd5e1;background:white;color:#1f2937;font-weight:bold;outline:none;cursor:pointer}.filter-label{font-size:13px;font-weight:bold;color:#374151}.filter-btn{border:none;padding:10px 18px;border-radius:999px;cursor:pointer;font-weight:bold;background:#e5e7eb;color:#374151}.filter-btn.active{background:#1d4ed8;color:white}.filter-btn.open.active{background:#ea580c}.filter-btn.closed.active{background:#dc2626}.filter-btn.ready.active{background:#16a34a}.filter-btn.today.active{background:#15803d}.filter-btn.doesnt.active{background:#4b5563}#map,.town-tracker-map{width:100%;height:540px;border-radius:16px;border:1px solid #cbd5e1;overflow:hidden}.map-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:13px;font-weight:bold;color:#374151;justify-content:center}.legend-item{display:flex;align-items:center;gap:7px}.dot{width:14px;height:14px;border-radius:50%;display:inline-block}.dot-green{background:#16a34a}.dot-green-check{background:#16a34a;color:white;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;line-height:1}.dot-red{background:#dc2626}.dot-gray{background:#4b5563}.dot-town-notvisited{background:#94a3b8}.dot-town-onboarded{background:#16a34a}.dot-town-openonly{background:#ea580c}.dot-town-noopen{background:#dc2626}.map-marker,.town-marker{width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.4)}.marker-open{background:#16a34a}.marker-ready{background:#16a34a;color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;line-height:1}.marker-ready:before{content:"✓"}.marker-closed{background:#dc2626}.marker-doesnt{background:#4b5563}.town-marker.notvisited{background:#94a3b8}.town-marker.onboarded{background:#16a34a}.town-marker.openonly{background:#ea580c}.town-marker.noopen{background:#dc2626}.popup-title{font-weight:bold;font-size:14px;margin-bottom:5px;text-align:center}.modal{display:none;position:fixed;z-index:99;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.82);justify-content:center;align-items:center;padding:20px}.modal img{max-width:94%;max-height:90%;border-radius:14px;background:white;padding:5px}.close{position:absolute;right:30px;top:18px;color:white;font-size:40px;font-weight:bold;cursor:pointer}.tracker-chart-wrap{width:100%;height:430px;position:relative}.tracker-empty{text-align:center;color:#64748b;font-weight:bold;padding:45px 10px;display:none;border:1px dashed #cbd5e1;border-radius:16px;background:#f8fafc}.level-district td{background:#eff6ff;font-weight:900;border-top:2px solid #bfdbfe}.level-tehsil td{background:#f8fafc;font-weight:800}.level-town td{background:#fff}.hierarchy-name{text-align:left}.indent-0{padding-left:10px!important}.indent-1{padding-left:34px!important}.indent-2{padding-left:62px!important}.unit-pill{display:inline-block;min-width:70px;padding:4px 9px;border-radius:999px;font-weight:900;font-size:11px;text-align:center;margin-right:8px;color:white}.unit-district{background:#1d4ed8}.unit-tehsil{background:#7c3aed}.unit-town{background:#4b5563}.town-type-tracker-block .tracker-kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:0}.town-type-tracker-block .card{padding:14px 8px}.town-type-tracker-block .card h3{font-size:clamp(22px,2.1vw,30px)}@media(max-width:1200px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.container{padding:20px}}@media(max-width:1100px){.kpi-grid,.summary-grid{grid-template-columns:minmax(0,1fr)}.town-operation-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.town-type-tracker-grid{grid-template-columns:1fr}.town-type-tracker-block .tracker-kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:800px){.cards,.database-cards,.town-master-metrics,.town-type-breakdown,.town-type-tracker-block .tracker-kpi-grid{grid-template-columns:1fr}.district-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.header{padding:24px 30px}.top-download-btn{position:static;display:block;margin:0 0 10px 0;width:fit-content}.brand-row{align-items:flex-start;flex-direction:column}.logo{height:48px}.header h1{font-size:24px}.container{padding:16px}#map,.town-tracker-map{height:430px}}
   </style>
@@ -71,38 +72,21 @@ function getValue(cells,index){if(!cells[index])return"";return cells[index].f||
 function parseFlexibleDate(value){
   if(value===null||value===undefined||value==="")return null;
   if(value instanceof Date&&!isNaN(value.getTime()))return value;
-
-  let text=String(value)
-    .trim()
-    .replace(/\u00a0/g," ")
-    .replace(/[\u200e\u200f]/g,"")
-    .replace(/\s+/g," ");
-
+  let text=String(value).trim().replace(/\u00a0/g," ").replace(/[\u200e\u200f]/g,"").replace(/\s+/g," ");
   if(!text)return null;
-
   const invalid=text.toLowerCase();
   if(["#n/a","n/a","na","#value!","#ref!","#div/0!","not available"].includes(invalid))return null;
-
-  // Google Sheets GViz native date: Date(2026,5,7) = 7 Jun 2026 because month is zero-based.
   const google=text.match(/^Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})(?:,\s*(\d{1,2}),\s*(\d{1,2}),\s*(\d{1,2}))?\)$/);
   if(google){
-    const y=Number(google[1]);
-    const m0=Number(google[2]);
-    const d=Number(google[3]);
-    const h=Number(google[4]||0);
-    const mi=Number(google[5]||0);
-    const sec=Number(google[6]||0);
+    const y=Number(google[1]),m0=Number(google[2]),d=Number(google[3]),h=Number(google[4]||0),mi=Number(google[5]||0),sec=Number(google[6]||0);
     const parsed=new Date(y,m0,d,h,mi,sec);
     return isValidParsedDate(parsed,y,m0+1,d)?parsed:null;
   }
-
-  // Excel / Google Sheets serial date.
   if(/^\d+(?:\.\d+)?$/.test(text)){
     const serial=Number(text);
     if(serial>25000&&serial<80000){
       const wholeDays=Math.floor(serial-25569);
-      const ms=wholeDays*86400*1000;
-      const parsed=new Date(ms);
+      const parsed=new Date(wholeDays*86400*1000);
       const fraction=serial-Math.floor(serial);
       const seconds=Math.round(fraction*86400);
       parsed.setHours(Math.floor(seconds/3600));
@@ -112,56 +96,28 @@ function parseFlexibleDate(value){
     }
     return null;
   }
-
-  // HARD RULE: slash/dash dates are ALWAYS MM/DD/YYYY.
-  // 5/28/2026  => May 28, 2026
-  // 6/5/2026   => June 5, 2026
-  // 7/6/2026   => July 6, 2026
-  // 11/8/2026  => November 8, 2026, never 11 August.
   const m=text.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:\s*,?\s*(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?\s*([AP]M)?)?$/i);
   if(m){
-    const month=Number(m[1]);
-    const day=Number(m[2]);
+    const month=Number(m[1]),day=Number(m[2]);
     let year=Number(m[3]);
     if(year<100)year+=2000;
-
     if(month<1||month>12||day<1||day>31)return null;
-
     let hour=Number(m[4]||0);
-    const minute=Number(m[5]||0);
-    const secondValue=Number(m[6]||0);
-    const meridian=m[7]?m[7].toUpperCase():"";
-
+    const minute=Number(m[5]||0),secondValue=Number(m[6]||0),meridian=m[7]?m[7].toUpperCase():"";
     if(meridian==="PM"&&hour<12)hour+=12;
     if(meridian==="AM"&&hour===12)hour=0;
-
     const parsed=new Date(year,month-1,day,hour,minute,secondValue);
     return isValidParsedDate(parsed,year,month,day)?parsed:null;
   }
-
-  // Accept ISO only when it is explicitly yyyy-mm-dd. Do not use browser guessing.
   const iso=text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?$/);
   if(iso){
-    const year=Number(iso[1]);
-    const month=Number(iso[2]);
-    const day=Number(iso[3]);
-    const hour=Number(iso[4]||0);
-    const minute=Number(iso[5]||0);
-    const secondValue=Number(iso[6]||0);
+    const year=Number(iso[1]),month=Number(iso[2]),day=Number(iso[3]),hour=Number(iso[4]||0),minute=Number(iso[5]||0),secondValue=Number(iso[6]||0);
     const parsed=new Date(year,month-1,day,hour,minute,secondValue);
     return isValidParsedDate(parsed,year,month,day)?parsed:null;
   }
-
-  // No native Date fallback. Native browser parsing is exactly what creates wrong Aug/Nov type errors.
   return null;
 }
-function isValidParsedDate(date,year,month,day){
-  return date instanceof Date&&
-    !isNaN(date.getTime())&&
-    date.getFullYear()===year&&
-    date.getMonth()===month-1&&
-    date.getDate()===day;
-}
+function isValidParsedDate(date,year,month,day){return date instanceof Date&&!isNaN(date.getTime())&&date.getFullYear()===year&&date.getMonth()===month-1&&date.getDate()===day}
 function isDatabaseRow(row){return String(row.rtr||"").trim()!==""||String(row.party||"").trim()!==""||String(row.district||"").trim()!==""||String(row.town||"").trim()!==""||String(row.state||"").trim()!==""}
 function isVerifiedYes(row){const verified=String(row.verified||"").toLowerCase().trim();return verified==="yes"||verified==="y"||verified==="true"||verified==="1"}function isSubmitted(row){if(row.partySource==="New")return getDateCorrectValue(row)!==null;return isVerifiedYes(row)}function getDateCorrectValue(row){return parseFlexibleDate(row.dateCorrect)}function normalizeDateKey(date){return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0")}function formatDateLabel(key){const p=key.split("-");const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return p[2]+"-"+(months[Number(p[1])-1]||p[1])+"-"+p[0]}
 function statusText(row){return String(row.status||"").toLowerCase().trim()}function normalizedStatusText(row){return statusText(row).replace(/[’‘`´]/g,"'").replace(/\s+/g," ").trim()}function isDoesntExist(row){const s=normalizedStatusText(row);return s.includes("doesn't exist")||s.includes("doesnt exist")||s.includes("does not exist")||s.includes("not exist")}function isOpen(row){return statusText(row)==="open"}function isReady(row){const ready=String(row.ready||"").toLowerCase().trim();return!isDoesntExist(row)&&(["yes","y","true","1","onboarded","ready","ready to onboard"].includes(ready)||ready.includes("onboard")||statusText(row).includes("onboard"))}function isClosed(row){return!isOpen(row)&&!isReady(row)&&!isDoesntExist(row)}function getStatusType(row){if(isDoesntExist(row))return"doesnt";if(isReady(row))return"ready";if(isOpen(row))return"open";return"closed"}
@@ -183,7 +139,66 @@ function getLiveStatusBadge(item){if(item.submitted>=item.total&&item.total>0)re
 function renderVillageTypeTownSummary(){const tableBody=document.getElementById("villageTypeTownSummaryTable");if(!tableBody)return;const typeSummary=buildVillageTypeTownSummary(),preferred=["DHQ","P1","P2"],remaining=Object.keys(typeSummary).filter(t=>!preferred.includes(t)).sort((a,b)=>a.localeCompare(b)),ordered=preferred.filter(t=>typeSummary[t]).concat(remaining);let html="";ordered.forEach(type=>{const item=typeSummary[type];html+=`<tr><td><b>${safe(type)}</b></td><td>${item.total}</td><td>${item.started}</td><td>${item.completed}</td><td>${item.notStarted}</td></tr>`});if(Object.keys(typeSummary).length>0){const totals=Object.values(typeSummary).reduce((a,i)=>{a.total+=i.total;a.started+=i.started;a.completed+=i.completed;a.notStarted+=i.notStarted;return a},{total:0,started:0,completed:0,notStarted:0});html+=`<tr class="summary-row"><td>Total</td><td>${totals.total}</td><td>${totals.started}</td><td>${totals.completed}</td><td>${totals.notStarted}</td></tr>`}if(!html)html='<tr><td colspan="5" style="text-align:center;color:#64748b;font-weight:bold;">No town / village type data available</td></tr>';tableBody.innerHTML=html}
 function getTodayData(){const today=new Date();return submittedData.filter(row=>{const d=getDateCorrectValue(row);return d&&d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear()})}
 function renderKPICards(data,type){setText(type+"Visited",data.length);setText(type+"Open",data.filter(isOpen).length);setText(type+"Ready",data.filter(isReady).length);setText(type+"Closed",data.filter(isClosed).length);setText(type+"Doesnt",data.filter(isDoesntExist).length);setText(type+"Conversion",formatPercent(data.filter(isReady).length,data.filter(isOpen).length))}
-function renderDatewiseTracker(){const canvas=document.getElementById("dateTrackerChart"),emptyBox=document.getElementById("dateTrackerEmpty");if(!canvas)return;const counts={};submittedData.forEach(row=>{const d=getDateCorrectValue(row);if(!d)return;const key=normalizeDateKey(d);if(!counts[key])counts[key]={visited:0,open:0,onboarded:0};counts[key].visited++;if(isOpen(row))counts[key].open++;if(isReady(row))counts[key].onboarded++});const dateKeys=Object.keys(counts).sort((a,b)=>a.localeCompare(b));if(dateTrackerChart){dateTrackerChart.destroy();dateTrackerChart=null}if(dateKeys.length===0||typeof Chart==="undefined"){if(emptyBox)emptyBox.style.display="block";canvas.style.display="none";return}if(emptyBox)emptyBox.style.display="none";canvas.style.display="block";const labels=dateKeys.map(formatDateLabel),visitedValues=dateKeys.map(k=>counts[k].visited),openValues=dateKeys.map(k=>counts[k].open),onboardedValues=dateKeys.map(k=>counts[k].onboarded),max=Math.max(...visitedValues,...openValues,...onboardedValues,0),suggested=max>0?Math.ceil(max*1.18):10;dateTrackerChart=new Chart(canvas,{type:"bar",data:{labels,datasets:[{type:"bar",label:"Total Visited",data:visitedValues,backgroundColor:"rgba(100,116,139,.28)",borderColor:"#64748b",borderWidth:1,borderRadius:8},{type:"line",label:"Visited Trend",data:visitedValues,borderColor:"#dc2626",backgroundColor:"#dc2626",borderWidth:3,tension:.3,pointRadius:5},{type:"line",label:"Open Trend",data:openValues,borderColor:"#1d4ed8",backgroundColor:"#1d4ed8",borderWidth:3,tension:.3,pointRadius:5},{type:"line",label:"Onboarded Trend",data:onboardedValues,borderColor:"#16a34a",backgroundColor:"#16a34a",borderWidth:3,tension:.3,pointRadius:5}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:true,position:"top",labels:{font:{weight:"bold"}}}},scales:{x:{ticks:{font:{weight:"bold"}},grid:{display:false}},y:{beginAtZero:true,suggestedMax:suggested,ticks:{precision:0},title:{display:true,text:"Count"}}}}})}
+function renderDatewiseTracker(){
+  const canvas=document.getElementById("dateTrackerChart");
+  const emptyBox=document.getElementById("dateTrackerEmpty");
+  if(!canvas)return;
+  if(typeof Chart!=="undefined" && typeof ChartDataLabels!=="undefined"){
+    Chart.register(ChartDataLabels);
+  }
+  const counts={};
+  submittedData.forEach(row=>{
+    const d=getDateCorrectValue(row);
+    if(!d)return;
+    const key=normalizeDateKey(d);
+    if(!counts[key])counts[key]={visited:0,open:0,onboarded:0};
+    counts[key].visited++;
+    if(isOpen(row))counts[key].open++;
+    if(isReady(row))counts[key].onboarded++;
+  });
+  const dateKeys=Object.keys(counts).sort((a,b)=>a.localeCompare(b));
+  if(dateTrackerChart){dateTrackerChart.destroy();dateTrackerChart=null}
+  if(dateKeys.length===0||typeof Chart==="undefined"){
+    if(emptyBox)emptyBox.style.display="block";
+    canvas.style.display="none";
+    return;
+  }
+  if(emptyBox)emptyBox.style.display="none";
+  canvas.style.display="block";
+  const labels=dateKeys.map(formatDateLabel),
+        visitedValues=dateKeys.map(k=>counts[k].visited),
+        openValues=dateKeys.map(k=>counts[k].open),
+        onboardedValues=dateKeys.map(k=>counts[k].onboarded),
+        max=Math.max(...visitedValues,...openValues,...onboardedValues,0),
+        suggested=max>0?Math.ceil(max*1.30):10;
+  dateTrackerChart=new Chart(canvas,{
+    type:"bar",
+    data:{
+      labels,
+      datasets:[
+        {type:"bar",label:"Total Visited",data:visitedValues,backgroundColor:"rgba(100,116,139,.28)",borderColor:"#64748b",borderWidth:1,borderRadius:8,datalabels:{display:true,anchor:"end",align:"top",offset:4,formatter:v=>v>0?v:"",font:{weight:"bold",size:11},color:"#111827"}},
+        {type:"line",label:"Visited Trend",data:visitedValues,borderColor:"#dc2626",backgroundColor:"#dc2626",borderWidth:3,tension:.3,pointRadius:5,datalabels:{display:false}},
+        {type:"line",label:"Open Trend",data:openValues,borderColor:"#1d4ed8",backgroundColor:"#1d4ed8",borderWidth:3,tension:.3,pointRadius:5,datalabels:{display:true,anchor:"end",align:"top",offset:6,formatter:v=>v>0?v:"",font:{weight:"bold",size:11},color:"#1d4ed8"}},
+        {type:"line",label:"Onboarded Trend",data:onboardedValues,borderColor:"#16a34a",backgroundColor:"#16a34a",borderWidth:3,tension:.3,pointRadius:5,datalabels:{display:true,anchor:"end",align:"bottom",offset:6,formatter:v=>v>0?v:"",font:{weight:"bold",size:11},color:"#16a34a"}}
+      ]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      layout:{padding:{top:35,right:20,bottom:10,left:10}},
+      interaction:{mode:"index",intersect:false},
+      plugins:{
+        legend:{display:true,position:"top",labels:{font:{weight:"bold"}}},
+        datalabels:{clamp:true,clip:false},
+        tooltip:{enabled:true}
+      },
+      scales:{
+        x:{ticks:{font:{weight:"bold"}},grid:{display:false}},
+        y:{beginAtZero:true,suggestedMax:suggested,ticks:{precision:0},title:{display:true,text:"Count"}}
+      }
+    }
+  });
+}
 function renderGroupSummary(data,groupKey,tableId){const summary={};data.forEach(row=>{const name=String(row[groupKey]||"").trim();if(!name)return;if(!summary[name])summary[name]={total:0,open:0,ready:0,closed:0,doesnt:0};summary[name].total++;if(isOpen(row))summary[name].open++;if(isReady(row))summary[name].ready++;if(isClosed(row))summary[name].closed++;if(isDoesntExist(row))summary[name].doesnt++});let html="";Object.keys(summary).sort((a,b)=>summary[b].total-summary[a].total).forEach(name=>{const s=summary[name],label=groupKey==="partySource"?(name==="New"?'<span class="badge badge-new">New</span>':'<span class="badge badge-existing">Existing</span>'):`<b>${safe(name)}</b>`;html+=`<tr><td>${label}</td><td>${s.total}</td><td>${s.open}</td><td>${s.ready}</td><td>${formatPercent(s.ready,s.open)}</td><td>${s.closed}</td><td>${s.doesnt}</td></tr>`});const validRows=data.filter(row=>String(row[groupKey]||"").trim()!=="");if(validRows.length>0)html+=`<tr class="summary-row"><td>Total</td><td>${validRows.length}</td><td>${validRows.filter(isOpen).length}</td><td>${validRows.filter(isReady).length}</td><td>${formatPercent(validRows.filter(isReady).length,validRows.filter(isOpen).length)}</td><td>${validRows.filter(isClosed).length}</td><td>${validRows.filter(isDoesntExist).length}</td></tr>`;if(validRows.length===0)html='<tr><td colspan="7" style="text-align:center;color:#64748b;font-weight:bold;">No data available</td></tr>';document.getElementById(tableId).innerHTML=html}
 function renderSalesTeamSummary(data,tableId){const summary={};data.forEach(row=>{const name=String(row.sde||"").trim();if(!name)return;const type=getPartySourceLabel(row);const key=name+"||"+type;if(!summary[key])summary[key]={name,type,total:0,open:0,ready:0,closed:0,doesnt:0};summary[key].total++;if(isOpen(row))summary[key].open++;if(isReady(row))summary[key].ready++;if(isClosed(row))summary[key].closed++;if(isDoesntExist(row))summary[key].doesnt++});const teamTotals={};Object.values(summary).forEach(s=>{if(!teamTotals[s.name])teamTotals[s.name]=0;teamTotals[s.name]+=s.total});let html="";Object.values(summary).sort((a,b)=>teamTotals[b.name]-teamTotals[a.name]||a.name.localeCompare(b.name)||a.type.localeCompare(b.type)).forEach(s=>{html+=`<tr><td><b>${safe(s.name)}</b></td><td>${s.type==="New"?'<span class="badge badge-new">New</span>':'<span class="badge badge-existing">Existing</span>'}</td><td>${s.total}</td><td>${s.open}</td><td>${s.ready}</td><td>${formatPercent(s.ready,s.open)}</td><td>${s.closed}</td><td>${s.doesnt}</td></tr>`});const validRows=data.filter(row=>String(row.sde||"").trim()!=="");if(validRows.length>0)html+=`<tr class="summary-row"><td>Total</td><td>All</td><td>${validRows.length}</td><td>${validRows.filter(isOpen).length}</td><td>${validRows.filter(isReady).length}</td><td>${formatPercent(validRows.filter(isReady).length,validRows.filter(isOpen).length)}</td><td>${validRows.filter(isClosed).length}</td><td>${validRows.filter(isDoesntExist).length}</td></tr>`;if(validRows.length===0)html='<tr><td colspan="8" style="text-align:center;color:#64748b;font-weight:bold;">No data available</td></tr>';document.getElementById(tableId).innerHTML=html}
 function initMapIfNeeded(){if(map)return;map=L.map("map").setView([23.5,80],5);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map)}function clearMapMarkers(){if(!map)return;mapMarkers.forEach(marker=>map.removeLayer(marker));mapMarkers=[]}function renderMap(){if(typeof L==="undefined")return;initMapIfNeeded();clearMapMarkers();const rows=getMapRows(),bounds=[];rows.forEach(row=>{const coords=getBestCoordinates(row);if(!coords)return;const statusType=getStatusType(row),icon=L.divIcon({className:"",html:`<div class="map-marker marker-${statusType}"></div>`,iconSize:[22,22],iconAnchor:[11,11]}),marker=L.marker([coords.lat,coords.lng],{icon}).addTo(map);marker.bindPopup(`<div class="popup-title">${safe(display(row.party))}</div><div><b>Party Type:</b> ${getPartySourceLabel(row)}</div><div><b>Status:</b> ${getStatusLabel(row)}</div><div><b>Sales Team:</b> ${safe(display(row.sde))}</div><div><b>District:</b> ${safe(display(row.district))}</div><div><b>Town:</b> ${safe(display(row.town))}</div><div><b>Estimated Outlet Universe:</b> ${safe(display(row.estimatedOutletUniverse))}</div><div><b>Owner:</b> ${safe(display(row.owner))}</div><div><b>Phone:</b> ${safe(display(row.phone))}</div><div><b>Estimated Activation:</b> ${safe(display(row.estimatedActivationDate))}</div><div><b>Distance from Centre:</b> ${safe(display(row.distance))} m</div>`);mapMarkers.push(marker);bounds.push([coords.lat,coords.lng])});setTimeout(()=>{map.invalidateSize();if(bounds.length>0)map.fitBounds(bounds,{padding:[30,30]});else map.setView([23.5,80],5)},150)}
