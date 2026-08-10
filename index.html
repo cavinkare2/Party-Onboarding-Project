@@ -1307,6 +1307,22 @@
         Karnataka
       </button>
 
+      <button
+        class="state-btn"
+        id="btnWB"
+        onclick="changeSheet('WB')"
+      >
+        West Bengal
+      </button>
+
+      <button
+        class="state-btn"
+        id="btnJH"
+        onclick="changeSheet('JH')"
+      >
+        Jharkhand
+      </button>
+
     </div>
 
   </div>
@@ -2511,6 +2527,20 @@ const SHEETS = {
     gid: "542002121",
     newGid: "313608864",
     requestedDistricts: null
+  },
+
+  WB: {
+    name: "West Bengal",
+    gid: "1347135670",
+    newGid: "1140724904",
+    requestedDistricts: null
+  },
+
+  JH: {
+    name: "Jharkhand",
+    gid: "409582282",
+    newGid: "1874721940",
+    requestedDistricts: null
   }
 };
 
@@ -2520,7 +2550,9 @@ const ALL_SHEET_KEYS = [
   "MAH",
   "RJ",
   "BR",
-  "KA"
+  "KA",
+  "WB",
+  "JH"
 ];
 
 let currentSheet = "ALL";
