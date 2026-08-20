@@ -107,28 +107,280 @@ function getTodayDataFromRows(rows){const today=new Date();return rows.filter(ro
 function getDailyReportRows(report){const totalP1=report.townUniverse.P1.size,totalP2=report.townUniverse.P2.size;function p(n,d){return d?(n/d*100).toFixed(2)+"%":"0.00%"}return[["Total Count",totalP1,totalP2,"P1","P2"],["Visit",report.townAuditStatus.P1.visited,report.townAuditStatus.P2.visited,report.today.P1.towns.size,report.today.P2.towns.size],["Partners Visited",report.tillNow.P1.partnersVerified,report.tillNow.P2.partnersVerified,report.today.P1.partnersVerified,report.today.P2.partnersVerified],["Partners Open Listed",report.tillNow.P1.open,report.tillNow.P2.open,report.today.P1.open,report.today.P2.open],["Partners Converted",report.tillNow.P1.converted,report.tillNow.P2.converted,report.today.P1.converted,report.today.P2.converted],["Converted from List",report.tillNow.P1.convertedExisting,report.tillNow.P2.convertedExisting,report.today.P1.convertedExisting,report.today.P2.convertedExisting],["Converted from External",report.tillNow.P1.convertedNew,report.tillNow.P2.convertedNew,report.today.P1.convertedNew,report.today.P2.convertedNew],["% of Total Visit",p(report.townAuditStatus.P1.visited,totalP1),p(report.townAuditStatus.P2.visited,totalP2),"-","-"],["% Conversion from Open List",p(report.tillNow.P1.converted,report.tillNow.P1.open),p(report.tillNow.P2.converted,report.tillNow.P2.open),p(report.today.P1.converted,report.today.P1.open),p(report.today.P2.converted,report.today.P2.open)]]}
 function downloadDailyReport(){const report=buildDailyReportMetrics(),stateName=currentSheet==="ALL"?"ALL":SHEETS[currentSheet].name,now=new Date(),dateText=now.toLocaleDateString("en-IN"),timeText=now.toLocaleTimeString("en-IN"),rows=getDailyReportRows(report);let table="<table border='1'><thead><tr><th>Metric</th><th>P1</th><th>P2</th><th>Today P1</th><th>Today P2</th></tr></thead><tbody>";rows.forEach((row,ri)=>{table+="<tr>";row.forEach((value,ci)=>{const tag=ri===0||ci===0?"th":"td";table+="<"+tag+">"+excelSafe(value)+"</"+tag+">"});table+="</tr>"});table+="</tbody></table>";const notes="<br><table border='1'><tbody><tr><th>Generated For</th><td>"+excelSafe(stateName)+"</td></tr><tr><th>Generated Date</th><td>"+excelSafe(dateText)+"</td></tr><tr><th>Generated Time</th><td>"+excelSafe(timeText)+"</td></tr><tr><th>Scope</th><td>P1 and P2 only; DHQ excluded</td></tr></tbody></table>";downloadBlob("<html><head><meta charset='UTF-8'></head><body><h2>Party Onboarding Daily Report - "+excelSafe(stateName)+"</h2>"+table+notes+"</body></html>","Party_Onboarding_Daily_Report_"+stateName.replace(/\s+/g,"_")+"_"+dateText.replace(/\//g,"-")+".xls","application/vnd.ms-excel;charset=utf-8;")}
 /* =========================================================
-   ALL STATE REPORT
-   West Bengal / Assam: P1 + P2
-   Bihar: P1 + P2 + P3
-   Other states: P1 + P2
+   ALL STATE REPORT - FIXED EXPORT LAYOUT
+
+   Export structure:
+   1) "All States P1 P2" -> all P1/P2 states stacked vertically
+      (UP, MP, MAH, RJ, JH, West Bengal, Assam)
+      Exactly 5 columns: Metric | P1 | P2 | Today P1 | Today P2
+   2) "Bihar P1 P2 P3" -> Bihar separately
+      Exactly 7 columns: Metric | P1 | P2 | P3 | Today P1 | Today P2 | Today P3
+   3) Individual state sheets are retained for convenience.
+
+   Alignment:
+   - Metric labels: left aligned
+   - P1/P2/P3 + Today values: centre aligned
+   - State title: left aligned
+   - Fixed column widths / row heights / borders to match reference format
    ========================================================= */
-const ALL_STATE_REPORT_ORDER=["UP","MP","MAH","RJ","BR","JH","WB","AS"];
-const ALL_STATE_REPORT_TYPES={UP:["P1","P2"],MP:["P1","P2"],MAH:["P1","P2"],RJ:["P1","P2"],BR:["P1","P2","P3"],JH:["P1","P2"],WB:["P1","P2"],AS:["P1","P2"]};
-function buildAllStateReportMetricsForState(databaseRows,submittedRows,stateKey){const types=ALL_STATE_REPORT_TYPES[stateKey]||["P1","P2"],townUniverse={},townAuditStatus={},groups={};types.forEach(type=>{townUniverse[type]=new Set();townAuditStatus[type]={started:0,completed:0,visited:0}});databaseRows.forEach(row=>{const type=normalizeVillageType(row.villageType);if(!types.includes(type))return;const key=getTownUniqueKey(row);if(!key)return;townUniverse[type].add(key);const groupKey=type+"||"+key;if(!groups[groupKey])groups[groupKey]={type,total:0,submitted:0};groups[groupKey].total++;if(isSubmitted(row))groups[groupKey].submitted++});Object.values(groups).forEach(item=>{if(item.submitted>=item.total&&item.total>0)townAuditStatus[item.type].completed++;else if(item.submitted>0)townAuditStatus[item.type].started++});types.forEach(type=>townAuditStatus[type].visited=townAuditStatus[type].started+townAuditStatus[type].completed);function calculate(rows){const out={};types.forEach(type=>out[type]={towns:new Set(),partnersVerified:0,open:0,converted:0,convertedExisting:0,convertedNew:0});rows.forEach(row=>{const type=normalizeVillageType(row.villageType);if(!types.includes(type))return;const townKey=getTownUniqueKey(row);if(townKey)out[type].towns.add(townKey);out[type].partnersVerified++;if(isOpen(row))out[type].open++;if(isReady(row)){out[type].converted++;if(getPartySourceLabel(row)==="New")out[type].convertedNew++;else out[type].convertedExisting++}});return out}return{report:{townUniverse,townAuditStatus,tillNow:calculate(submittedRows),today:calculate(getTodayDataFromRows(submittedRows))},types}}
-function getAllStateReportRows(report,types){function p(n,d){return d?(n/d*100).toFixed(2)+"%":"0.00%"}return[["Total Count",...types.map(t=>report.townUniverse[t].size),...types],["Visit",...types.map(t=>report.townAuditStatus[t].visited),...types.map(t=>report.today[t].towns.size)],["Partners Visited",...types.map(t=>report.tillNow[t].partnersVerified),...types.map(t=>report.today[t].partnersVerified)],["Partners Open Listed",...types.map(t=>report.tillNow[t].open),...types.map(t=>report.today[t].open)],["Partners Converted",...types.map(t=>report.tillNow[t].converted),...types.map(t=>report.today[t].converted)],["Converted from List",...types.map(t=>report.tillNow[t].convertedExisting),...types.map(t=>report.today[t].convertedExisting)],["Converted from External",...types.map(t=>report.tillNow[t].convertedNew),...types.map(t=>report.today[t].convertedNew)],["% of Total Visit",...types.map(t=>p(report.townAuditStatus[t].visited,report.townUniverse[t].size)),...types.map(()=>"-")],["% Conversion from Open List",...types.map(t=>p(report.tillNow[t].converted,report.tillNow[t].open)),...types.map(t=>p(report.today[t].converted,report.today[t].open))]]}
-function downloadAllStateReport(){const button=document.querySelector(".all-state-report-btn");if(button){button.disabled=true;button.innerText="Generating..."}const loading=document.getElementById("loading");if(loading){loading.style.display="block";loading.innerHTML="Generating All State Report: loading all state sheets..."}allStateReportRows=[];allStateReportJobs=[];allStateReportJobIndex=0;ALL_SHEET_KEYS.forEach(key=>{allStateReportJobs.push({sheetKey:key,gid:SHEETS[key].gid,partySource:"Existing"});allStateReportJobs.push({sheetKey:key,gid:SHEETS[key].newGid,partySource:"New"})});loadNextAllStateReportJob()}
-function loadNextAllStateReportJob(){if(allStateReportJobIndex>=allStateReportJobs.length){finishAllStateReportDownload();return}const job=allStateReportJobs[allStateReportJobIndex];activeAllStateReportJob=job;const loading=document.getElementById("loading");if(loading)loading.innerHTML="Generating All State Report: loading "+SHEETS[job.sheetKey].name+" - "+job.partySource+" parties...";if(allStateReportCurrentScript)allStateReportCurrentScript.remove();const url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?gid="+job.gid+"&tqx=responseHandler:handleAllStateReportData&cacheBust="+Date.now();allStateReportCurrentScript=document.createElement("script");allStateReportCurrentScript.src=url;allStateReportCurrentScript.onerror=function(){console.warn("All state report load failed",job);allStateReportJobIndex++;loadNextAllStateReportJob()};document.body.appendChild(allStateReportCurrentScript)}
-function handleAllStateReportData(response){try{const job=activeAllStateReportJob;allStateReportRows=allStateReportRows.concat(parseSheetResponse(response,job.sheetKey,job.partySource))}catch(error){console.error("All state report parsing failed",error,activeAllStateReportJob)}allStateReportJobIndex++;loadNextAllStateReportJob()}
-function finishAllStateReportDownload(){const loading=document.getElementById("loading"),button=document.querySelector(".all-state-report-btn");try{const now=new Date(),dateText=now.toLocaleDateString("en-IN"),timeText=now.toLocaleTimeString("en-IN"),workbook=buildAllStateWorkbookXml(allStateReportRows,dateText,timeText);downloadBlob(workbook,"Party_Onboarding_All_State_Report_"+dateText.replace(/\//g,"-")+".xls","application/vnd.ms-excel;charset=utf-8;");if(loading)loading.style.display="none"}catch(error){console.error(error);if(loading){loading.style.display="block";loading.innerHTML="All State Report failed. Check browser console / sheet permission."}}finally{if(button){button.disabled=false;button.innerText="All State Report"}if(allStateReportCurrentScript)allStateReportCurrentScript.remove()}}
-function buildAllStateWorkbookXml(rows,dateText,timeText){const databaseRows=rows.filter(row=>row.partySource!=="New"&&isDatabaseRow(row)),submittedRows=rows.filter(isSubmitted),stateBlocks={};ALL_STATE_REPORT_ORDER.forEach(key=>{const stateDatabaseRows=databaseRows.filter(row=>row.sourceSheetKey===key),stateSubmittedRows=submittedRows.filter(row=>row.sourceSheetKey===key),stateReport=buildAllStateReportMetricsForState(stateDatabaseRows,stateSubmittedRows,key);stateBlocks[key]={stateName:SHEETS[key].name,reportRows:getAllStateReportRows(stateReport.report,stateReport.types),types:stateReport.types}});const combinedSheet=buildAllStateSummaryWorksheetXml(stateBlocks,dateText,timeText);const individualSheets=ALL_STATE_REPORT_ORDER.map(key=>{const block=stateBlocks[key];return buildDailyWorksheetXml(block.stateName,block.reportRows,dateText,timeText,block.types)}).join("");return'<?xml version="1.0"?>'+'<?mso-application progid="Excel.Sheet"?>'+'<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">'+'<Styles>'+buildAllStateWorkbookStylesXml()+'</Styles>'+combinedSheet+individualSheets+'</Workbook>'}
-function buildAllStateWorkbookStylesXml(){const border='<Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/></Borders>';return'<Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11"/></Style>'+'<Style ss:ID="StateTitle"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="14" ss:Bold="1"/><Interior ss:Color="#D9EAF7" ss:Pattern="Solid"/>'+border+'</Style>'+'<Style ss:ID="HeaderMetric"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#2647AD" ss:Pattern="Solid"/>'+border+'</Style>'+'<Style ss:ID="HeaderCenter"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#2647AD" ss:Pattern="Solid"/>'+border+'</Style>'+'<Style ss:ID="Metric"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1"/><Interior ss:Color="#F1F4F8" ss:Pattern="Solid"/>'+border+'</Style>'+'<Style ss:ID="ValueCenter"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11"/>'+border+'</Style>'+'<Style ss:ID="ValueBoldCenter"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1"/><Interior ss:Color="#F1F4F8" ss:Pattern="Solid"/>'+border+'</Style>'+'<Style ss:ID="MetaLabel"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="9" ss:Bold="1" ss:Color="#64748B"/></Style>'+'<Style ss:ID="MetaValue"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="9" ss:Color="#64748B"/></Style>'}
-function buildAllStateSummaryWorksheetXml(stateBlocks,dateText,timeText){let xml='<Worksheet ss:Name="All State Summary"><Table>';xml+='<Column ss:AutoFitWidth="0" ss:Width="235"/>';for(let i=0;i<6;i++)xml+='<Column ss:AutoFitWidth="0" ss:Width="88"/>';ALL_STATE_REPORT_ORDER.forEach((key,index)=>{const block=stateBlocks[key];xml+=buildStateReportSectionXml(block.stateName,block.reportRows,block.types);if(index<ALL_STATE_REPORT_ORDER.length-1)xml+=xmlRow([""],[null],8)});xml+=xmlRow(["Generated Date",dateText],["MetaLabel","MetaValue"],18);xml+=xmlRow(["Generated Time",timeText],["MetaLabel","MetaValue"],18);xml+='</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><Selected/><ProtectObjects>False</ProtectObjects><ProtectScenarios>False</ProtectScenarios></WorksheetOptions></Worksheet>';return xml}
-function buildDailyWorksheetXml(stateName,reportRows,dateText,timeText,reportTypes=["P1","P2"]){const types=reportTypes||["P1","P2"];let xml='<Worksheet ss:Name="'+xmlSafe(sanitizeSheetName(stateName))+'"><Table>';xml+='<Column ss:AutoFitWidth="0" ss:Width="235"/>';for(let i=0;i<types.length*2;i++)xml+='<Column ss:AutoFitWidth="0" ss:Width="88"/>';xml+=buildStateReportSectionXml(stateName,reportRows,types);xml+=xmlRow([""],[null],8);xml+=xmlRow(["Generated Date",dateText],["MetaLabel","MetaValue"],18);xml+=xmlRow(["Generated Time",timeText],["MetaLabel","MetaValue"],18);xml+='</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><ProtectObjects>False</ProtectObjects><ProtectScenarios>False</ProtectScenarios></WorksheetOptions></Worksheet>';return xml}
-function buildStateReportSectionXml(stateName,reportRows,types){const header=["Metric",...types,...types.map(type=>"Today "+type)];let xml=xmlRow([stateName],["StateTitle"],24);xml+=xmlRow(header,["HeaderMetric",...new Array(header.length-1).fill("HeaderCenter")],22);reportRows.forEach((row,index)=>{const styles=["Metric",...new Array(Math.max(row.length-1,0)).fill(index===0?"ValueBoldCenter":"ValueCenter")];xml+=xmlRow(row,styles,21)});return xml}
-function xmlRow(values,cellStyles=[],height){let output='<Row'+(height?' ss:Height="'+height+'"':'')+'>';values.forEach((value,index)=>{output+=xmlCell(value,cellStyles[index]||null)});return output+'</Row>'}
-function xmlCell(value,style){const isNumber=typeof value==="number"&&isFinite(value),styleText=style?' ss:StyleID="'+style+'"':"";return'<Cell'+styleText+'><Data ss:Type="'+(isNumber?"Number":"String")+'">'+xmlSafe(value)+'</Data></Cell>'}
-function xmlSafe(value){return String(value===null||value===undefined?"":value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function sanitizeSheetName(name){return String(name||"Sheet").replace(/[\\\/\?\*\[\]\:]/g," ").substring(0,31)||"Sheet"}
+const ALL_STATE_REPORT_ORDER=["UP","MP","MAH","RJ","JH","WB","AS","BR"];
+const ALL_STATE_P1P2_ORDER=["UP","MP","MAH","RJ","JH","WB","AS"];
+const ALL_STATE_REPORT_TYPES={
+  UP:["P1","P2"],
+  MP:["P1","P2"],
+  MAH:["P1","P2"],
+  RJ:["P1","P2"],
+  JH:["P1","P2"],
+  WB:["P1","P2"],
+  AS:["P1","P2"],
+  BR:["P1","P2","P3"]
+};
+
+function buildAllStateReportMetricsForState(databaseRows,submittedRows,stateKey){
+  const types=ALL_STATE_REPORT_TYPES[stateKey]||["P1","P2"],townUniverse={},townAuditStatus={},groups={};
+  types.forEach(type=>{townUniverse[type]=new Set();townAuditStatus[type]={started:0,completed:0,visited:0}});
+
+  databaseRows.forEach(row=>{
+    const type=normalizeVillageType(row.villageType);
+    if(!types.includes(type))return;
+    const key=getTownUniqueKey(row);
+    if(!key)return;
+    townUniverse[type].add(key);
+    const groupKey=type+"||"+key;
+    if(!groups[groupKey])groups[groupKey]={type,total:0,submitted:0};
+    groups[groupKey].total++;
+    if(isSubmitted(row))groups[groupKey].submitted++;
+  });
+
+  Object.values(groups).forEach(item=>{
+    if(item.submitted>=item.total&&item.total>0)townAuditStatus[item.type].completed++;
+    else if(item.submitted>0)townAuditStatus[item.type].started++;
+  });
+
+  types.forEach(type=>townAuditStatus[type].visited=townAuditStatus[type].started+townAuditStatus[type].completed);
+
+  function calculate(rows){
+    const out={};
+    types.forEach(type=>out[type]={towns:new Set(),partnersVerified:0,open:0,converted:0,convertedExisting:0,convertedNew:0});
+    rows.forEach(row=>{
+      const type=normalizeVillageType(row.villageType);
+      if(!types.includes(type))return;
+      const townKey=getTownUniqueKey(row);
+      if(townKey)out[type].towns.add(townKey);
+      out[type].partnersVerified++;
+      if(isOpen(row))out[type].open++;
+      if(isReady(row)){
+        out[type].converted++;
+        if(getPartySourceLabel(row)==="New")out[type].convertedNew++;
+        else out[type].convertedExisting++;
+      }
+    });
+    return out;
+  }
+
+  return{
+    report:{
+      townUniverse,
+      townAuditStatus,
+      tillNow:calculate(submittedRows),
+      today:calculate(getTodayDataFromRows(submittedRows))
+    },
+    types
+  };
+}
+
+function getAllStateReportRows(report,types){
+  function p(n,d){return d?(n/d*100).toFixed(2)+"%":"0.00%"}
+  return[
+    ["Total Count",...types.map(t=>report.townUniverse[t].size),...types],
+    ["Visit",...types.map(t=>report.townAuditStatus[t].visited),...types.map(t=>report.today[t].towns.size)],
+    ["Partners Visited",...types.map(t=>report.tillNow[t].partnersVerified),...types.map(t=>report.today[t].partnersVerified)],
+    ["Partners Open Listed",...types.map(t=>report.tillNow[t].open),...types.map(t=>report.today[t].open)],
+    ["Partners Converted",...types.map(t=>report.tillNow[t].converted),...types.map(t=>report.today[t].converted)],
+    ["Converted from List",...types.map(t=>report.tillNow[t].convertedExisting),...types.map(t=>report.today[t].convertedExisting)],
+    ["Converted from External",...types.map(t=>report.tillNow[t].convertedNew),...types.map(t=>report.today[t].convertedNew)],
+    ["% of Total Visit",...types.map(t=>p(report.townAuditStatus[t].visited,report.townUniverse[t].size)),...types.map(()=>"-")],
+    ["% Conversion from Open List",...types.map(t=>p(report.tillNow[t].converted,report.tillNow[t].open)),...types.map(t=>p(report.today[t].converted,report.today[t].open))]
+  ];
+}
+
+function downloadAllStateReport(){
+  const button=document.querySelector(".all-state-report-btn");
+  if(button){button.disabled=true;button.innerText="Generating..."}
+  const loading=document.getElementById("loading");
+  if(loading){loading.style.display="block";loading.innerHTML="Generating All State Report: loading all state sheets..."}
+  allStateReportRows=[];
+  allStateReportJobs=[];
+  allStateReportJobIndex=0;
+  ALL_SHEET_KEYS.forEach(key=>{
+    allStateReportJobs.push({sheetKey:key,gid:SHEETS[key].gid,partySource:"Existing"});
+    allStateReportJobs.push({sheetKey:key,gid:SHEETS[key].newGid,partySource:"New"});
+  });
+  loadNextAllStateReportJob();
+}
+
+function loadNextAllStateReportJob(){
+  if(allStateReportJobIndex>=allStateReportJobs.length){finishAllStateReportDownload();return}
+  const job=allStateReportJobs[allStateReportJobIndex];
+  activeAllStateReportJob=job;
+  const loading=document.getElementById("loading");
+  if(loading)loading.innerHTML="Generating All State Report: loading "+SHEETS[job.sheetKey].name+" - "+job.partySource+" parties...";
+  if(allStateReportCurrentScript)allStateReportCurrentScript.remove();
+  const url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?gid="+job.gid+"&tqx=responseHandler:handleAllStateReportData&cacheBust="+Date.now();
+  allStateReportCurrentScript=document.createElement("script");
+  allStateReportCurrentScript.src=url;
+  allStateReportCurrentScript.onerror=function(){console.warn("All state report load failed",job);allStateReportJobIndex++;loadNextAllStateReportJob()};
+  document.body.appendChild(allStateReportCurrentScript);
+}
+
+function handleAllStateReportData(response){
+  try{
+    const job=activeAllStateReportJob;
+    allStateReportRows=allStateReportRows.concat(parseSheetResponse(response,job.sheetKey,job.partySource));
+  }catch(error){
+    console.error("All state report parsing failed",error,activeAllStateReportJob);
+  }
+  allStateReportJobIndex++;
+  loadNextAllStateReportJob();
+}
+
+function finishAllStateReportDownload(){
+  const loading=document.getElementById("loading"),button=document.querySelector(".all-state-report-btn");
+  try{
+    const now=new Date(),dateText=now.toLocaleDateString("en-IN"),timeText=now.toLocaleTimeString("en-IN"),workbook=buildAllStateWorkbookXml(allStateReportRows,dateText,timeText);
+    downloadBlob(workbook,"Party_Onboarding_All_State_Report_FIXED_"+dateText.replace(/\//g,"-")+".xls","application/vnd.ms-excel;charset=utf-8;");
+    if(loading)loading.style.display="none";
+  }catch(error){
+    console.error(error);
+    if(loading){loading.style.display="block";loading.innerHTML="All State Report failed. Check browser console / sheet permission."}
+  }finally{
+    if(button){button.disabled=false;button.innerText="All State Report"}
+    if(allStateReportCurrentScript)allStateReportCurrentScript.remove();
+  }
+}
+
+function buildAllStateWorkbookXml(rows,dateText,timeText){
+  const databaseRows=rows.filter(row=>row.partySource!=="New"&&isDatabaseRow(row));
+  const submittedRows=rows.filter(isSubmitted);
+  const stateBlocks={};
+
+  ALL_STATE_REPORT_ORDER.forEach(key=>{
+    const stateDatabaseRows=databaseRows.filter(row=>row.sourceSheetKey===key);
+    const stateSubmittedRows=submittedRows.filter(row=>row.sourceSheetKey===key);
+    const stateReport=buildAllStateReportMetricsForState(stateDatabaseRows,stateSubmittedRows,key);
+    stateBlocks[key]={
+      stateName:SHEETS[key].name,
+      reportRows:getAllStateReportRows(stateReport.report,stateReport.types),
+      types:stateReport.types
+    };
+  });
+
+  const p1p2SummarySheet=buildP1P2StatesWorksheetXml(stateBlocks,dateText,timeText);
+  const biharSheet=buildBiharWorksheetXml(stateBlocks.BR,dateText,timeText);
+
+  const individualSheets=ALL_STATE_REPORT_ORDER.map(key=>{
+    const block=stateBlocks[key];
+    return buildDailyWorksheetXml(block.stateName,block.reportRows,dateText,timeText,block.types);
+  }).join("");
+
+  return '<?xml version="1.0"?>'+
+    '<?mso-application progid="Excel.Sheet"?>'+
+    '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">'+
+    '<Styles>'+buildAllStateWorkbookStylesXml()+'</Styles>'+p1p2SummarySheet+biharSheet+individualSheets+'</Workbook>';
+}
+
+function buildAllStateWorkbookStylesXml(){
+  const border='<Borders>'+[
+    '<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/>',
+    '<Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/>',
+    '<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/>',
+    '<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#D9D9D9"/>'
+  ].join('')+'</Borders>';
+
+  return '<Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11"/></Style>'+
+    '<Style ss:ID="StateTitle"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="14" ss:Bold="1"/><Interior ss:Color="#D9EAF7" ss:Pattern="Solid"/>'+border+'</Style>'+
+    '<Style ss:ID="HeaderMetric"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#2647AD" ss:Pattern="Solid"/>'+border+'</Style>'+
+    '<Style ss:ID="HeaderCenter"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#2647AD" ss:Pattern="Solid"/>'+border+'</Style>'+
+    '<Style ss:ID="Metric"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1"/><Interior ss:Color="#F1F4F8" ss:Pattern="Solid"/>'+border+'</Style>'+
+    '<Style ss:ID="ValueCenter"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11"/>'+border+'</Style>'+
+    '<Style ss:ID="ValueBoldCenter"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="11" ss:Bold="1"/><Interior ss:Color="#F1F4F8" ss:Pattern="Solid"/>'+border+'</Style>'+
+    '<Style ss:ID="MetaLabel"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="9" ss:Bold="1" ss:Color="#64748B"/></Style>'+
+    '<Style ss:ID="MetaValue"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="9" ss:Color="#64748B"/></Style>';
+}
+
+/* P1/P2 summary sheet: fixed 5-column layout. This is the sheet that matches the West Bengal/Assam reference image. */
+function buildP1P2StatesWorksheetXml(stateBlocks,dateText,timeText){
+  let xml='<Worksheet ss:Name="All States P1 P2"><Table>';
+  xml+='<Column ss:AutoFitWidth="0" ss:Width="285"/>';
+  for(let i=0;i<4;i++)xml+='<Column ss:AutoFitWidth="0" ss:Width="90"/>';
+
+  ALL_STATE_P1P2_ORDER.forEach((key,index)=>{
+    const block=stateBlocks[key];
+    xml+=buildStateReportSectionXml(block.stateName,block.reportRows,["P1","P2"]);
+    if(index<ALL_STATE_P1P2_ORDER.length-1)xml+=xmlRow([""],[null],8);
+  });
+
+  xml+=xmlRow(["Generated Date",dateText],["MetaLabel","MetaValue"],18);
+  xml+=xmlRow(["Generated Time",timeText],["MetaLabel","MetaValue"],18);
+  xml+='</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><Selected/><FreezePanes/><FrozenNoSplit/><SplitHorizontal>0</SplitHorizontal><ProtectObjects>False</ProtectObjects><ProtectScenarios>False</ProtectScenarios></WorksheetOptions></Worksheet>';
+  return xml;
+}
+
+/* Bihar gets its own exact 7-column layout so no blank P3 columns affect West Bengal/Assam or other P1/P2 states. */
+function buildBiharWorksheetXml(block,dateText,timeText){
+  let xml='<Worksheet ss:Name="Bihar P1 P2 P3"><Table>';
+  xml+='<Column ss:AutoFitWidth="0" ss:Width="285"/>';
+  for(let i=0;i<6;i++)xml+='<Column ss:AutoFitWidth="0" ss:Width="90"/>';
+  xml+=buildStateReportSectionXml(block.stateName,block.reportRows,["P1","P2","P3"]);
+  xml+=xmlRow([""],[null],8);
+  xml+=xmlRow(["Generated Date",dateText],["MetaLabel","MetaValue"],18);
+  xml+=xmlRow(["Generated Time",timeText],["MetaLabel","MetaValue"],18);
+  xml+='</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><ProtectObjects>False</ProtectObjects><ProtectScenarios>False</ProtectScenarios></WorksheetOptions></Worksheet>';
+  return xml;
+}
+
+function buildDailyWorksheetXml(stateName,reportRows,dateText,timeText,reportTypes=["P1","P2"]){
+  const types=reportTypes||["P1","P2"];
+  let xml='<Worksheet ss:Name="'+xmlSafe(sanitizeSheetName(stateName))+'"><Table>';
+  xml+='<Column ss:AutoFitWidth="0" ss:Width="285"/>';
+  for(let i=0;i<types.length*2;i++)xml+='<Column ss:AutoFitWidth="0" ss:Width="90"/>';
+  xml+=buildStateReportSectionXml(stateName,reportRows,types);
+  xml+=xmlRow([""],[null],8);
+  xml+=xmlRow(["Generated Date",dateText],["MetaLabel","MetaValue"],18);
+  xml+=xmlRow(["Generated Time",timeText],["MetaLabel","MetaValue"],18);
+  xml+='</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><ProtectObjects>False</ProtectObjects><ProtectScenarios>False</ProtectScenarios></WorksheetOptions></Worksheet>';
+  return xml;
+}
+
+function buildStateReportSectionXml(stateName,reportRows,types){
+  const header=["Metric",...types,...types.map(type=>"Today "+type)];
+  let xml=xmlRow([stateName],["StateTitle"],25);
+  xml+=xmlRow(header,["HeaderMetric",...new Array(header.length-1).fill("HeaderCenter")],23);
+  reportRows.forEach((row,index)=>{
+    const styles=["Metric",...new Array(Math.max(row.length-1,0)).fill(index===0?"ValueBoldCenter":"ValueCenter")];
+    xml+=xmlRow(row,styles,22);
+  });
+  return xml;
+}
+
+function xmlRow(values,cellStyles=[],height){
+  let output='<Row'+(height?' ss:Height="'+height+'"':'')+'>';
+  values.forEach((value,index)=>{output+=xmlCell(value,cellStyles[index]||null)});
+  return output+'</Row>';
+}
+
+function xmlCell(value,style){
+  const isNumber=typeof value==="number"&&isFinite(value),styleText=style?' ss:StyleID="'+style+'"':'';
+  return '<Cell'+styleText+'><Data ss:Type="'+(isNumber?'Number':'String')+'">'+xmlSafe(value)+'</Data></Cell>';
+}
+
+function xmlSafe(value){
+  return String(value===null||value===undefined?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function sanitizeSheetName(name){
+  return String(name||'Sheet').replace(/[\\\/\?\*\[\]\:]/g,' ').substring(0,31)||'Sheet';
+}
 function downloadExcelDump(){const rows=getPartyListData();if(!rows.length){alert("No data available to download for the selected filter.");return}const stateName=currentSheet==="ALL"?"ALL":SHEETS[currentSheet].name,filterName=partyFilter==="all"?"All":partyFilter==="ready"?"Onboarded":partyFilter==="open"?"Open":partyFilter==="closed"?"Closed":partyFilter==="existing"?"Existing":partyFilter==="new"?"New":"Doesnt Exist",headers=["Party Type","RTR / New Party ID","State","Party Name","Latitude","Longitude","District","Tehsil","Town","Village Type","Unique Key","Estimated Outlet Universe","Verified","Submission Time","Date Correct","Sales Team","Live Lat","Live Long","Distance from Centre","Status","Status Category","Owner Name","Phone Number","Onboarded","Estimated Activation Date","Photo Link","Remarks","Onboarding Action Status"];let table="<table border='1'><thead><tr>";headers.forEach(h=>table+="<th>"+excelSafe(h)+"</th>");table+="</tr></thead><tbody>";rows.forEach(row=>{const values=[getPartySourceLabel(row),row.rtr,row.state,row.party,row.latitude,row.longitude,row.district,row.tehsil,row.town,normalizeVillageType(row.villageType),getTownUniqueKey(row),row.estimatedOutletUniverse,row.verified,row.submissionTime,row.dateCorrect,row.sde,row.liveLat,row.liveLong,row.distance,row.status,getStatusLabel(row),row.owner,row.phone,isReady(row)?"Yes":"No",row.estimatedActivationDate,row.photo,row.remarks,getOnboardingActionRaw(row)];table+="<tr>";values.forEach((value,index)=>{const cleaned=excelSafe(display(value,""));table+=headers[index]==="Photo Link"&&cleaned?"<td><a href='"+cleaned+"'>"+cleaned+"</a></td>":"<td>"+cleaned+"</td>"});table+="</tr>"});table+="</tbody></table>";downloadBlob("<html><head><meta charset='UTF-8'></head><body><h2>Party Onboarding Project - "+excelSafe(stateName)+" - "+excelSafe(filterName)+"</h2>"+table+"</body></html>","Party_Onboarding_"+stateName.replace(/\s+/g,"_")+"_"+filterName.replace(/\s+/g,"_")+"_Dump.xls","application/vnd.ms-excel;charset=utf-8;")}
 function excelSafe(value){return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}function downloadBlob(content,fileName,type){const blob=new Blob([content],{type}),link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=fileName;document.body.appendChild(link);link.click();document.body.removeChild(link);URL.revokeObjectURL(link.href)}function getDriveImage(url){if(!url)return"";const text=String(url),match=text.match(/\/d\/([^/]+)/);return match&&match[1]?"https://drive.google.com/thumbnail?id="+match[1]+"&sz=w1400":text}function openImage(source){document.getElementById("modalImage").src=source;document.getElementById("imageModal").style.display="flex"}function closeImage(){document.getElementById("imageModal").style.display="none"}
 setTimeout(()=>{if(rawData.length===0){document.getElementById("loading").style.display="block";document.getElementById("loading").innerHTML="No rows found. Check sheet sharing permission, selected state / ALL tabs, and sheet gid."}else if(submittedData.length===0){document.getElementById("loading").style.display="block";document.getElementById("loading").innerHTML="Database loaded, but no submitted work found. Check Date Correct / Verified and Sales Team columns."}},8000);
